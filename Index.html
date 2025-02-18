@@ -38,10 +38,14 @@
 
 <script>
     // Map initialization 
-    var map = L.map('map').setView([41.547849, 2.213761],12);
+    var map = L.map('map').setView([41.547849, 2.213761],10);
     var current_position;
     var posicion_inicio = ""
     var marca_circulo
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const destino = urlParams.get("destino");    
+    console.log(destino);
 
     //osm layer
     var osm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -70,7 +74,7 @@
     // wrap map.locate in a function    
     function locate() 
     {
-      map.locate({setView: true, maxZoom: 12});
+      map.locate({setView: true, maxZoom: 10});
       
       function onLocationFound(e) 
        {
@@ -94,7 +98,7 @@
     }
 
     // call locate every 3 seconds... forever
-    setInterval(locate, 1500)    
+    setInterval(locate, 3000)    
 </script>
 </body>
 </html>
