@@ -38,7 +38,7 @@
 
 <script>
     // Map initialization 
-    var map = L.map('map').setView([41.547849, 2.213761],10);
+    var map = L.map('map').setView([41.547849, 2.213761],12);
     var current_position;
     var posicion_inicio = ""
 
@@ -47,7 +47,12 @@
         attribution: 'MiFutbol. Ver 3.0'
     });
     osm.addTo(map);
-    
+
+    var MiBola = L.icon({
+      iconUrl: 'img/circulo.png',
+      iconSize: [70, 70]
+    })    
+
     //Calculo de la ruta
     function ruta() 
     {
@@ -64,7 +69,7 @@
     // wrap map.locate in a function    
     function locate() 
     {
-      map.locate({setView: true, maxZoom: 16});
+      map.locate({setView: true, maxZoom: 12});
       
       function onLocationFound(e) 
        {
@@ -73,7 +78,8 @@
           {
              map.removeLayer(current_position);
           }
-         current_position = L.marker(e.latlng).addTo(map);
+         current_position = L.marker([e.latlng], {icon: MiBola}).addTo(map);
+
          if (posicion_inicio === "")
            {
               posicion_inicio = e.latlng;
