@@ -45,7 +45,7 @@
     const lon_ini = queryString.get("lon_ini");    
 
     // Map initialization 
-    var map = L.map('map').setView([lat_ini, lon_ini],10);
+    var map = L.map('map').setView([lat_ini, lon_ini],10);   //Parte del mapa que se ve al activar, que es el punto de origen
     var current_position;
     var posicion_inicio = ""
     var marca_circulo
@@ -66,8 +66,8 @@
     {
       L.Routing.control({
           waypoints:[
-            L.latLng(posicion_inicio),   //Origen
-            L.latLng(param_lat, param_lon)    //Destino
+            L.latLng(lat_ini, lon_ini),       //punto de Origen
+            L.latLng(param_lat, param_lon)    //punto de Destino
           ],
           routeWhileDragging: true,
           show: false
