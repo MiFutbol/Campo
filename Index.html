@@ -40,10 +40,11 @@
 
     const queryString = new URLSearchParams(window.location.search);  
     const param_lat = queryString.get("lat");    
-    alert (param_lat);
+    const param_lon = queryString.get("lon");    
+    alert (param_lon);
 
     // Map initialization 
-    var map = L.map('map').setView([41.547849, 2.213761],10);
+    var map = L.map('map').setView([param_lat, param_lon],10);
     var current_position;
     var posicion_inicio = ""
     var marca_circulo
@@ -65,7 +66,7 @@
       L.Routing.control({
           waypoints:[
             L.latLng(posicion_inicio),   //Origen
-            L.latLng(41.547849, 2.213761)    //Destino
+            L.latLng(param_lat, param_lon)    //Destino
           ],
           routeWhileDragging: true,
           show: false
