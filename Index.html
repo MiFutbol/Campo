@@ -47,8 +47,6 @@
     // Map initialization 
     var map = L.map('map').setView([lat_ini, lon_ini],10);   //Parte del mapa que se ve al activar, que es el punto de origen
     var current_position;
-    var posicion_inicio = "";
-    var marca_circulo;
 
     //osm layer
     var osm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -91,17 +89,13 @@
 //        current_position = L.marker(e.latlng).addTo(map);
 //         marca_circulo = L.marker([e.latlng.lat, e.latlng.lng], { icon: MiBola }).addTo(map).bindPopup('Yo').openPopup();
 alert (e.latlng);
-         if (posicion_inicio === "")
-           {
-              posicion_inicio = e.latlng;
-              ruta();
-           }  
        }
       map.on('locationfound', onLocationFound);
     }
 
     // call locate every 5 seconds... forever
     setInterval(locate, 5000)    
+    ruta;
 </script>
 </body>
 </html>
