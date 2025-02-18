@@ -39,7 +39,7 @@
 <script>
 
     const queryString = new URLSearchParams(window.location.search);  
-    const param_lat = urlParams.get("lat");    
+    const param_lat = queryString.get("lat");    
     alert (param_lat);
 
     // Map initialization 
