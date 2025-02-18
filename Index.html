@@ -38,7 +38,7 @@
 
 <script>
 
-    const queryString = window.location.search;
+    const queryString = new URLSearchParams(window.location.search);
     alert (queryString);
     const destino = urlParams.get("destino");    
     console.log(destino);
