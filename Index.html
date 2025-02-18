@@ -43,6 +43,7 @@
     const param_lon = queryString.get("lon");    
     const lat_ini = queryString.get("lat_ini");    
     const lon_ini = queryString.get("lon_ini");    
+    var id_timer;
 
     // Map initialization 
     var map = L.map('map').setView([lat_ini, lon_ini],10);   //Parte del mapa que se ve al activar, que es el punto de origen
@@ -75,7 +76,8 @@
     // wrap map.locate in a function    
     function locate() 
     {
-      map.locate({setView: true, maxZoom: 10});
+        clearInterval(id_timer);
+        map.locate({setView: true, maxZoom: 10});
       
       function onLocationFound(e) 
        {
@@ -91,10 +93,11 @@
 alert (e.latlng);
        }
       map.on('locationfound', onLocationFound);
+        id_timer = setinternal(locate, 5000);
     }
 
     // call locate every 5 seconds... forever
-    setInterval(locate, 5000)    
+    id_timer = setInterval(locate, 5000)    
     ruta;
 </script>
 </body>
