@@ -37,15 +37,17 @@
     <script src="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.js"></script>
 
 <script>
+
+    const queryString = window.location.search;
+    alert (queryString);
+    const destino = urlParams.get("destino");    
+    console.log(destino);
+
     // Map initialization 
     var map = L.map('map').setView([41.547849, 2.213761],10);
     var current_position;
     var posicion_inicio = ""
     var marca_circulo
-
-    const urlParams = new URLSearchParams(window.location.search);
-    const destino = urlParams.get("destino");    
-    console.log(destino);
 
     //osm layer
     var osm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
