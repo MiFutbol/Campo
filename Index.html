@@ -41,6 +41,7 @@
     var map = L.map('map').setView([41.547849, 2.213761],12);
     var current_position;
     var posicion_inicio = ""
+    var marca_circulo
 
     //osm layer
     var osm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -49,8 +50,8 @@
     osm.addTo(map);
 
     var MiBola = L.icon({
-      iconUrl: 'img/circulo.png',
-      iconSize: [70, 70]
+      iconUrl: 'Img/circulo.png',
+      iconSize: [15, 15]
     })    
 
     //Calculo de la ruta
@@ -77,14 +78,14 @@
          if (current_position) 
           {
              map.removeLayer(current_position);
+             map.removeLayer(marca_circulo);
           }
          current_position = L.marker(e.latlng).addTo(map);
-
+         marca_circulo = L.marker([e.latlng.lat, e.latlng.lng], { icon: MiBola }).addTo(map).bindPopup('Yo').openPopup();
 
          if (posicion_inicio === "")
            {
               posicion_inicio = e.latlng;
-              var marker = L.marker([e.latlng.lat, e.latlng.lng], { icon: MiBola }).addTo(map);
               ruta();
            }  
        }
