@@ -86,7 +86,7 @@
              map.removeLayer(current_position);
              //map.removeLayer(marca_circulo);
           }
-          current_position = L.marker([e.latlng.lat, e.latlng.lng], { icon: MiBola }).addTo(map).bindPopup('Yo').openPopup(); 
+          current_position = L.marker([e.latlng.lat, e.latlng.lng], { icon: MiBola }).addTo(map); 
 //         current_position = L.marker(e.latlng).addTo(map);
 //         marca_circulo = L.marker([e.latlng.lat, e.latlng.lng], { icon: MiBola }).addTo(map).bindPopup('Yo').openPopup();
 
@@ -99,8 +99,8 @@
       map.on('locationfound', onLocationFound);
     }
 
-    // call locate every 3 seconds... forever
-    setInterval(locate, 3000)    
+    // call locate every 5 seconds... forever
+    setInterval(locate, 5000)    
 </script>
 </body>
 </html>
