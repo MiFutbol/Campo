@@ -51,7 +51,7 @@
 
     var MiBola = L.icon({
       iconUrl: 'Img/circulo.png',
-      iconSize: [30, 30]
+      iconSize: [15, 15]
     })    
 
     //Calculo de la ruta
@@ -78,10 +78,11 @@
          if (current_position) 
           {
              map.removeLayer(current_position);
-             map.removeLayer(marca_circulo);
+             //map.removeLayer(marca_circulo);
           }
-         current_position = L.marker(e.latlng).addTo(map);
-         marca_circulo = L.marker([e.latlng.lat, e.latlng.lng], { icon: MiBola }).addTo(map).bindPopup('Yo').openPopup();
+          current_position = L.marker([e.latlng.lat, e.latlng.lng], { icon: MiBola }).addTo(map).bindPopup('Yo').openPopup(); 
+//         current_position = L.marker(e.latlng).addTo(map);
+//         marca_circulo = L.marker([e.latlng.lat, e.latlng.lng], { icon: MiBola }).addTo(map).bindPopup('Yo').openPopup();
 
          if (posicion_inicio === "")
            {
