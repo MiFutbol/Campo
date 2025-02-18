@@ -38,10 +38,9 @@
 
 <script>
 
-    const queryString = new URLSearchParams(window.location.search);
-    alert (queryString);
-    const destino = urlParams.get("destino");    
-    console.log(destino);
+    const queryString = new URLSearchParams(window.location.search);  
+    const param_lat = urlParams.get("lat");    
+    alert (param_lat);
 
     // Map initialization 
     var map = L.map('map').setView([41.547849, 2.213761],10);
