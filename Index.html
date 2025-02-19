@@ -37,39 +37,37 @@
     <script src="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.js"></script>
 
 <script>
+    var MiBola = L.icon
+    ({
+      iconUrl: 'Img/circulo.png',
+      iconSize: [15, 15]
+    }) 
 
     const queryString = new URLSearchParams(window.location.search);  
-    const param_lat = queryString.get("lat");    
-    const param_lon = queryString.get("lon");    
+    const lat_fin = queryString.get("lat_fin");    
+    const lon_fin = queryString.get("lon_fin");    
     const lat_ini = queryString.get("lat_ini");    
     const lon_ini = queryString.get("lon_ini");    
 
     // Map initialization 
-    var map = L.map('map').setView([lat_ini, lon_ini],10);   //Parte del mapa que se ve al activar, que es el punto de origen
-    var current_position;
-    var posicion_inicio = ""
-    var marca_circulo
+    var map = L.map('map').setView([lat_ini, lon_ini], 13);                                        //Parte del mapa que se ve al activar, que es el punto de origen
+    var posicion_actual = L.marker([lat_ini, lon_ini], { icon: MiBola }).addTo(map);               //Coloca la bolita azul en el punto de partida que es tambien nuestra posicion actual
+    var posicion_inicio = "";
 
     //osm layer
-    var osm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: 'MiFutbol. Ver 3.0'
-    });
-    osm.addTo(map);
-
-    var MiBola = L.icon({
-      iconUrl: 'Img/circulo.png',
-      iconSize: [15, 15]
-    })    
+    var osm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {attribution: 'MiFutbol. Ver 3.0'});
+    osm.addTo(map);   
 
     //Calculo de la ruta
     function ruta() 
     {
       L.Routing.control({
           waypoints:[
-            L.latLng(lat_ini, lon_ini),       //punto de Origen
-            L.latLng(param_lat, param_lon)    //punto de Destino
+            L.latLng(posicion_inicio),    //punto de Origen
+            L.latLng(lat_fin, lon_fin)    //punto de Destino
           ],
-          routeWhileDragging: true,
+          fitSelectedRoutes: false,       //No hace el zoom para ver la ruta, deja el zoom que tenga
+          routeWhileDragging: true,       //No desplega el detalle de la ruta
           show: false
       }).addTo(map); 
     }
@@ -77,19 +75,12 @@
     // wrap map.locate in a function    
     function locate() 
     {
-      map.locate({setView: true, maxZoom: 10});
+      map.locate({watch: true, maxZoom: 13});   //Localiza nuestra posicion actual
       
       function onLocationFound(e) 
        {
-         var radius = e.accuracy;
-         if (current_position) 
-          {
-             map.removeLayer(current_position);
-             //map.removeLayer(marca_circulo);
-          }
-          current_position = L.marker([e.latlng.lat, e.latlng.lng], { icon: MiBola }).addTo(map); 
-//         current_position = L.marker(e.latlng).addTo(map);
-//         marca_circulo = L.marker([e.latlng.lat, e.latlng.lng], { icon: MiBola }).addTo(map).bindPopup('Yo').openPopup();
+         map.removeLayer(posicion_actual);                                                          //Elimina la marca de la bolita azul anterior
+         posicion_actual = L.marker([e.latlng.lat, e.latlng.lng], { icon: MiBola }).addTo(map);     //Coloca la bolita azul otra vez pero en nuestra posicion actual
 
          if (posicion_inicio === "")
            {
@@ -99,9 +90,8 @@
        }
       map.on('locationfound', onLocationFound);
     }
-
-    // call locate every 5 seconds... forever
-    setInterval(locate, 5000)    
+    
+    setInterval(locate, 2000)    
 </script>
 </body>
 </html>
