@@ -76,7 +76,6 @@
     // wrap map.locate in a function    
     function locate() 
     {
-        clearInterval(id_timer);
         map.locate({setView: true, maxZoom: 10});
       
       function onLocationFound(e) 
@@ -93,11 +92,10 @@
 alert (e.latlng);
        }
       map.on('locationfound', onLocationFound);
-        id_timer = setinternal(locate, 5000);
     }
 
     // call locate every 5 seconds... forever
-    id_timer = setInterval(locate, 5000)    
+    setInterval(locate, 5000)    
     ruta;
 </script>
 </body>
