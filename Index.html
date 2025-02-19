@@ -35,8 +35,8 @@
     <div id="map"></div>
     <script src="https://unpkg.com/leaflet@1.8.0/dist/leaflet.js"></script>
     <script src="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.js"></script>
-    <div id="tiempo">tiempo</div>
-    <div id="distancia">distancia</div>
+    <div id="tiempo"></div>
+    <div id="distancia"></div>
 <script>
     var MiBola = L.icon
     ({
@@ -51,7 +51,7 @@
     const lon_ini = queryString.get("lon_ini");    
 
     // Map initialization 
-    var map = L.map('map').setView([lat_ini, lon_ini], 13);                                        //Parte del mapa que se ve al activar, que es el punto de origen
+    var map = L.map('map').setView([lat_ini, lon_ini], 10);                                        //Parte del mapa que se ve al activar, que es el punto de origen
     var posicion_actual = L.marker([lat_ini, lon_ini], { icon: MiBola }).addTo(map);               //Coloca la bolita azul en el punto de partida que es tambien nuestra posicion actual
     var posicion_inicio = "";
 
@@ -73,20 +73,22 @@
                            show: true
                         }).addTo(map); 
 
-   routeControl.on('routesfound', function(e) {
-   var routes = e.routes;
-   var summary = routes[0].summary;
-   // alert distance and time in km and minutes
-   alert('Total distance is ' + summary.totalDistance / 1000 + ' km and total time is ' + Math.round(summary.totalTime % 3600 / 60) + ' minutes');
-   var miDiv = document.getElementById('tiempo');
-   miDiv.innerHTML = Math.round(summary.totalTime % 3600 / 60);
-});
+     //Pone el valor del tiempo que se tardaria en la etiquita tiempo <div>
+     routeControl.on('routesfound', function(e) 
+        {
+           var routes = e.routes;
+           var summary = routes[0].summary;
+              // alert distance and time in km and minutes
+              alert('Total distance is ' + summary.totalDistance / 1000 + ' km and total time is ' + Math.round(summary.totalTime % 3600 / 60) + ' minutes');
+              var miDiv = document.getElementById('tiempo');
+              miDiv.innerHTML = Math.round(summary.totalTime % 3600 / 60);
+        });
     }
 
     // wrap map.locate in a function    
     function locate() 
     {
-      map.locate({watch: true, maxZoom: 13});   //Localiza nuestra posicion actual
+      map.locate({watch: true, maxZoom: 10});   //Localiza nuestra posicion actual
       
       function onLocationFound(e) 
        {
