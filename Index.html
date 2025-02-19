@@ -35,7 +35,8 @@
     <div id="map"></div>
     <script src="https://unpkg.com/leaflet@1.8.0/dist/leaflet.js"></script>
     <script src="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.js"></script>
-
+    <div id="tiempo">tiempo</div>
+    <div id="distancia">distancia</div>
 <script>
     var MiBola = L.icon
     ({
@@ -61,15 +62,25 @@
     //Calculo de la ruta
     function ruta() 
     {
-      L.Routing.control({
-          waypoints:[
-            L.latLng(posicion_inicio),    //punto de Origen
-            L.latLng(lat_fin, lon_fin)    //punto de Destino
-          ],
-          fitSelectedRoutes: false,       //No hace el zoom para ver la ruta, deja el zoom que tenga
-          routeWhileDragging: true,       //No desplega el detalle de la ruta
-          show: false
-      }).addTo(map); 
+      var routeControl = L.Routing.control({
+                           waypoints:[
+                              L.latLng(posicion_inicio),    //punto de Origen
+                              L.latLng(lat_fin, lon_fin)    //punto de Destino
+                                     ],
+                           language: 'es',
+                           fitSelectedRoutes: false,       //No hace el zoom para ver la ruta, deja el zoom que tenga
+                           routeWhileDragging: true,       //No desplega el detalle de la ruta
+                           show: true
+                        }).addTo(map); 
+
+   routeControl.on('routesfound', function(e) {
+   var routes = e.routes;
+   var summary = routes[0].summary;
+   // alert distance and time in km and minutes
+   alert('Total distance is ' + summary.totalDistance / 1000 + ' km and total time is ' + Math.round(summary.totalTime % 3600 / 60) + ' minutes');
+   var miDiv = document.getElementById('tiempo');
+   miDiv.innerHTML = Math.round(summary.totalTime % 3600 / 60);
+});
     }
 
     // wrap map.locate in a function    
@@ -91,7 +102,7 @@
       map.on('locationfound', onLocationFound);
     }
     
-    setInterval(locate, 2000)    
+    setInterval(locate, 3000)    
 </script>
 </body>
 </html>
