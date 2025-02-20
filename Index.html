@@ -32,7 +32,7 @@
 </head>
 
 <body>   
-    <div style="text-align: center", id="resumen">Detalle:</div>
+    <div style="text-align: center", id="resumen">Obteniendo posicion y ruta ...</div>
     <div  id="map"></div>
     <div style="text-align: left;", id="llegada">Llegada aprox: </div>
     <script src="https://unpkg.com/leaflet@1.8.0/dist/leaflet.js"></script>
@@ -110,8 +110,8 @@
                            
                            var fecha = new Date();
                            var aux = fecha.setHours(fecha.getHours() + h);
-                           const hora = new Date(aux);
-                           aux = hora.setMinutes(hora.getMinutes() + m);
+                               aux = fecha.setMinutes(fecha.getMinutes() + m);
+//                           const hora = new Date(aux);
                            fecha = new Date(aux);
                            duracion = (fecha.getHours() > 0 ? fecha.getHours() + ":" + (fecha.getMinutes() < 10 ? "0" : "") : "00:") + fecha.getMinutes(); 
                            miDiv2.innerHTML = "Llegada aprox: <strong>" + duracion + "</strong>";
@@ -121,9 +121,6 @@
     // wrap map.locate in a function    
     function locate() 
     {
-      var miDiv = document.getElementById('resumen'); 
-      miDiv.innerHTML  = "Obteniendo posicion y ruta ..."; 
-
       map.locate({watch: true, maxZoom: 13});   //Localiza nuestra posicion actual
       
       function onLocationFound(e) 
