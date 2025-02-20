@@ -34,6 +34,7 @@
 <body>   
     <div style="text-align: center", id="resumen">Detalle:</div>
     <div  id="map"></div>
+    <div style="text-align: left;", id="llegada">Llegada aprox: </div>
     <script src="https://unpkg.com/leaflet@1.8.0/dist/leaflet.js"></script>
     <script src="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.js"></script>
 <script>
@@ -56,7 +57,27 @@
 
     //osm layer
     var osm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {attribution: 'MiFutbol. Ver 3.0'});
-    osm.addTo(map);   
+    osm.addTo(map);  
+
+    //Hora estima de llegada 
+    function addHoursToDate(objDate, intHours) 
+    {
+        var numberOfMlSeconds = objDate.getTime();
+        var addMlSeconds = (intHours * 60) * 60000;
+        var newDateObj = new Date(numberOfMlSeconds + addMlSeconds);
+        return newDateObj;
+    }
+
+    //Redondeo decimales
+    function redondearDecimales(numero, decimales) 
+    {
+        numeroRegexp = new RegExp('\\d\\.(\\d){' + decimales + ',}');   // Expresion regular para numeros con un cierto numero de decimales o mas
+        if (numeroRegexp.test(numero)) {         // Ya que el numero tiene el numero de decimales requeridos o mas, se realiza el redondeo
+            return Number(numero.toFixed(decimales));
+        } else {
+            return Number(numero.toFixed(decimales)) === 0 ? 0 : numero;  // En valores muy bajos, se comprueba si el numero es 0 (con el redondeo deseado), si no lo es se devuelve el numero otra vez.
+        }  
+    }
 
     //Calculo de la ruta
     function ruta() 
@@ -77,9 +98,23 @@
                         {
                            var routes = e.routes;
                            var summary = routes[0].summary;
-                           var miDiv = document.getElementById('resumen');       
+                           var miDiv = document.getElementById('resumen'); 
+                           var miDiv2 = document.getElementById('llegada');       
+                           var distancia = summary.totalDistance / 1000;
 
-                           miDiv.innerHTML  = "Detalle: <strong>" + Math.round(summary.totalTime % 3600 / 60) + "</strong> <small>minutos</small> / <strong>" + summary.totalDistance / 1000 + "</strong> <small>Km</small>"; 
+                           var duracion = Number(summary.totalTime);
+                           const h = Math.floor(duracion / 3600);
+                           const m = Math.floor(duracion % 3600 / 60);
+                           duracion = (h > 0 ? h + " h " + (m < 10 ? "0" : "") : "") + m; 
+                           miDiv.innerHTML  = "Detalle: <strong>" + duracion + " min" + "</strong> <small>minutos</small> / <strong>" + redondearDecimales(distancia, 2) + "</strong> <small>Km</small>"; 
+                           
+                           var fecha = new Date();
+                           var aux = fecha.setHours(fecha.getHours() + h);
+                           const hora = new Date(aux);
+                           aux = hora.setMinutes(hora.getMinutes() + m);
+                           fecha = new Date(aux);
+                           duracion = (fecha.getHours() > 0 ? fecha.getHours() + ":" + (fecha.getMinutes() < 10 ? "0" : "") : "00:") + fecha.getMinutes(); 
+                           miDiv2.innerHTML = "Llegada aprox: <strong>" + duracion + "</strong>";
                         });
     }
 
