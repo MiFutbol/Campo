@@ -51,7 +51,7 @@
     const lon_ini = queryString.get("lon_ini");    
 
     // Map initialization 
-    var map = L.map('map').setView([lat_ini, lon_ini], 10);                                        //Parte del mapa que se ve al activar, que es el punto de origen
+    var map = L.map('map').setView([lat_ini, lon_ini], 13);                                        //Parte del mapa que se ve al activar, que es el punto de origen
     var posicion_actual = L.marker([lat_ini, lon_ini], { icon: MiBola }).addTo(map);               //Coloca la bolita azul en el punto de partida que es tambien nuestra posicion actual
     var posicion_inicio = "";
 
@@ -121,12 +121,16 @@
     // wrap map.locate in a function    
     function locate() 
     {
-      map.locate({watch: true, maxZoom: 10});   //Localiza nuestra posicion actual
+      var miDiv = document.getElementById('resumen'); 
+      miDiv.innerHTML  = "Obteniendo posicion y ruta ..."; 
+
+      map.locate({watch: true, maxZoom: 13});   //Localiza nuestra posicion actual
       
       function onLocationFound(e) 
        {
          map.removeLayer(posicion_actual);                                                          //Elimina la marca de la bolita azul anterior
          posicion_actual = L.marker([e.latlng.lat, e.latlng.lng], { icon: MiBola }).addTo(map);     //Coloca la bolita azul otra vez pero en nuestra posicion actual
+         map.setView (new L.LatLng(e.latlng.lat, e.latlng.lng), 13);
 
          if (posicion_inicio === "")
            {
