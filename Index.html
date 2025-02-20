@@ -112,7 +112,7 @@
                            var aux = fecha.setHours(fecha.getHours() + h);
                                aux = fecha.setMinutes(fecha.getMinutes() + m);
 //                           const hora = new Date(aux);
-                           fecha = new Date(aux);
+//                           fecha = new Date(aux);
                            duracion = (fecha.getHours() > 0 ? fecha.getHours() + ":" + (fecha.getMinutes() < 10 ? "0" : "") : "00:") + fecha.getMinutes(); 
                            miDiv2.innerHTML = "Llegada aprox: <strong>" + duracion + "</strong>";
                         });
