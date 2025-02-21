@@ -19,7 +19,7 @@
     <script src="https://npmcdn.com/leaflet@0.7.7/dist/leaflet.js"></script>
     <script src="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.js"></script>
     <script>L_NO_TOUCH = true;</script>
-    <!-- <script src="leaflet.js"></script> -->
+
     <style>
         body {
             margin: 0;
@@ -34,8 +34,8 @@
 </head>
 
 <body>   
-    <div style="text-align: left;", id="resumen">Obteniendo posicion y ruta ...</div>
-    <div style="text-align: left;", id="llegada">Calculando hora llegada ...</div>
+    <div style="text-align: left;", id="resumen"><small>Obteniendo posicion y ruta ...</small></div>
+    <div style="text-align: left;", id="llegada"><small>Calculando hora llegada ...</small></div>
     <div  id="map"></div>
     <script src="https://unpkg.com/leaflet@1.8.0/dist/leaflet.js"></script>
     <script src="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.js"></script>
@@ -54,11 +54,11 @@
 
     // Map initialization 
     var map = L.map('map', {minZoom: 15, maxZoom: 15}).setView([lat_ini, lon_ini], 15);              //Parte del mapa que se ve al activar, que es el punto de origen
-    var posicion_actual = L.marker([lat_ini, lon_ini], { icon: MiBola }).addTo(map);               //Coloca la bolita azul en el punto de partida que es tambien nuestra posicion actual
+    var posicion_actual = L.marker([lat_ini, lon_ini], { icon: MiBola }).addTo(map);                 //Coloca la bolita azul en el punto de partida que es tambien nuestra posicion actual
     var posicion_inicio = "";
     var routeControl = "";
     var nueva_posicion = "";
-    var contador=0;
+    var contador = 0;                                                                                //Contador para poder actualizar la ruta
 
     //osm layer
     var osm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {attribution: 'MiFutbol. Ver 3.0'});
@@ -67,12 +67,15 @@
     //Redondeo decimales
     function redondearDecimales(numero, decimales) 
     {
-        numeroRegexp = new RegExp('\\d\\.(\\d){' + decimales + ',}');   // Expresion regular para numeros con un cierto numero de decimales o mas
-        if (numeroRegexp.test(numero)) {         // Ya que el numero tiene el numero de decimales requeridos o mas, se realiza el redondeo
-            return Number(numero.toFixed(decimales));
-        } else {
-            return Number(numero.toFixed(decimales)) === 0 ? 0 : numero;  // En valores muy bajos, se comprueba si el numero es 0 (con el redondeo deseado), si no lo es se devuelve el numero otra vez.
-        }  
+        numeroRegexp = new RegExp('\\d\\.(\\d){' + decimales + ',}');                                // Expresion regular para numeros con un cierto numero de decimales o mas
+        if (numeroRegexp.test(numero)) 
+           {                                                                                         // Ya que el numero tiene el numero de decimales requeridos o mas, se realiza el redondeo
+             return Number(numero.toFixed(decimales));
+           } 
+           else 
+           {
+             return Number(numero.toFixed(decimales)) === 0 ? 0 : numero;                             // En valores muy bajos, se comprueba si el numero es 0 (con el redondeo deseado), si no lo es se devuelve el numero otra vez.
+           }  
     }
 
     //Calculo de la ruta
@@ -80,8 +83,8 @@
     {
       routeControl = L.Routing.control({
                            waypoints:[
-                              L.latLng(posicion_inicio),    //punto de Origen                          
-                              L.latLng(lat_fin, lon_fin)    //punto de Destino
+                                        L.latLng(posicion_inicio),    //punto de Origen                          
+                                        L.latLng(lat_fin, lon_fin)    //punto de Destino
                                      ],
                            language: 'es',
                            fitSelectedRoutes: false,       //No hace el zoom para ver la ruta, deja el zoom que tenga
@@ -111,11 +114,10 @@
                            miDiv2.innerHTML = "<small>Llegada aprox: <strong>" + duracion + "  </strong></small>";
                         });
     }
-
-    // wrap map.locate in a function    
+   
     function locate() 
     {
-      map.locate({watch: true, maxZoom: 15});   //Localiza nuestra posicion actual
+      map.locate({watch: true, maxZoom: 15});                                                       //Localiza nuestra posicion actual
       
       function onLocationFound(e) 
        {
@@ -125,10 +127,10 @@
          map.setView (new L.LatLng(e.latlng.lat, e.latlng.lng), 15);
            
          contador++;
-         if (contador === 20)
-         {
+         if (contador === 100)
+           {
              actualizar_ruta();
-         }
+           }
            
          if (posicion_inicio === "")
            {
@@ -143,21 +145,16 @@
     //Actualizar ruta
     function actualizar_ruta() 
     {
-    //  clearInterval(id);
       map.removeControl(routeControl);
   
       var miDiv = document.getElementById('resumen'); 
-      var miDiv2 = document.getElementById('llegada'); 
       miDiv.innerHTML  = "<small>Recalculando...</small>"; 
-      miDiv2.innerHTML = "<small></small>";
       
       posicion_inicio = nueva_posicion;
       ruta();
       contador = 0;
-//      var id = setInterval(locate, 8000)
     }
     
-//    setInterval(actualizar_ruta, 60000);   //Cada 60seg paramos el tiempo de localizacion y actualizamos la ruta segun la posicion que nos encontremos
     var id = setInterval(locate, 8000)
 </script>
 </body>
