@@ -54,7 +54,6 @@
     var map = L.map('map', {minZoom: 15, maxZoom: 15}).setView([lat_ini, lon_ini], 15);              //Parte del mapa que se ve al activar, que es el punto de origen
     var posicion_actual = L.marker([lat_ini, lon_ini], { icon: MiBola }).addTo(map);               //Coloca la bolita azul en el punto de partida que es tambien nuestra posicion actual
     var posicion_inicio = "";
-    var gps_actual = "";
     var routeControl = "";
 
     //osm layer
@@ -138,8 +137,24 @@
        }
       map.on('locationfound', onLocationFound);
     }
+
+    //Actualizar ruta
+    function actualizar_ruta() 
+    {
+      clearInterval(id);
+      map.removeControl(routeControl);
+  
+      var miDiv = document.getElementById('resumen'); 
+      var miDiv2 = document.getElementById('llegada'); 
+      miDiv.innerHTML  = "<small>Recalculando...</small>"; 
+      miDiv2.innerHTML = "<small></small>";
+  
+      ruta();
+      var id = setInterval(locate, 6000)
+    }
     
-    setInterval(locate, 6000)    
+    setInterval(actualizar_ruta, 60000);   //Cada 60seg paramos el tiempo de localizacion y actualizamos la ruta segun la posicion que nos encontremos
+    var id = setInterval(locate, 6000)
 </script>
 </body>
 </html>
