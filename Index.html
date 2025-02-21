@@ -55,6 +55,7 @@
     var posicion_actual = L.marker([lat_ini, lon_ini], { icon: MiBola }).addTo(map);               //Coloca la bolita azul en el punto de partida que es tambien nuestra posicion actual
     var posicion_inicio = "";
     var routeControl = "";
+    var nueva_posicion = "";
 
     //osm layer
     var osm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {attribution: 'MiFutbol. Ver 3.0'});
@@ -126,6 +127,7 @@
        {
          map.removeLayer(posicion_actual);                                                          //Elimina la marca de la bolita azul anterior
          posicion_actual = L.marker([e.latlng.lat, e.latlng.lng], { icon: MiBola }).addTo(map);     //Coloca la bolita azul otra vez pero en nuestra posicion actual
+         nueva_posicion = e.latlng;
          map.setView (new L.LatLng(e.latlng.lat, e.latlng.lng), 15);
 
          if (posicion_inicio === "")
@@ -148,7 +150,8 @@
       var miDiv2 = document.getElementById('llegada'); 
       miDiv.innerHTML  = "<small>Recalculando...</small>"; 
       miDiv2.innerHTML = "<small></small>";
-  
+
+      posicion_inicio = nueva_posicion;
       ruta();
       var id = setInterval(locate, 6000)
     }
