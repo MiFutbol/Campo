@@ -54,6 +54,8 @@
     var map = L.map('map', {minZoom: 15, maxZoom: 15}).setView([lat_ini, lon_ini], 15);              //Parte del mapa que se ve al activar, que es el punto de origen
     var posicion_actual = L.marker([lat_ini, lon_ini], { icon: MiBola }).addTo(map);               //Coloca la bolita azul en el punto de partida que es tambien nuestra posicion actual
     var posicion_inicio = "";
+    var gps_actual = "";
+    var routeControl = "";
 
     //osm layer
     var osm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {attribution: 'MiFutbol. Ver 3.0'});
@@ -82,7 +84,7 @@
     //Calculo de la ruta
     function ruta() 
     {
-      var routeControl = L.Routing.control({
+      routeControl = L.Routing.control({
                            waypoints:[
                               L.latLng(posicion_inicio),    //punto de Origen                          
                               L.latLng(lat_fin, lon_fin)    //punto de Destino
@@ -93,8 +95,8 @@
                            show: false
                         }).addTo(map); 
 
-     //Pone el valor del tiempo y distancia que se tardaria en la etiquita tiempo <div>
-     routeControl.on('routesfound', function(e) 
+      //Pone el valor del tiempo y distancia que se tardaria en la etiquita tiempo <div>
+      routeControl.on('routesfound', function(e) 
                         {
                            var routes = e.routes;
                            var summary = routes[0].summary;
@@ -111,8 +113,6 @@
                            var fecha = new Date();
                            var aux = fecha.setHours(fecha.getHours() + h);
                                aux = fecha.setMinutes(fecha.getMinutes() + m);
-//                           const hora = new Date(aux);
-//                           fecha = new Date(aux);
                            duracion = (fecha.getHours() > 0 ? fecha.getHours() + ":" + (fecha.getMinutes() < 10 ? "0" : "") : "00:") + fecha.getMinutes(); 
                            miDiv2.innerHTML = "<small>Llegada aprox: <strong>" + duracion + "  </strong></small>";
                         });
@@ -132,8 +132,9 @@
          if (posicion_inicio === "")
            {
               posicion_inicio = e.latlng;
-              ruta();
-           }  
+              ruta();  
+           } 
+       
        }
       map.on('locationfound', onLocationFound);
     }
