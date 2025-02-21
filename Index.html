@@ -17,7 +17,8 @@
     <script src="https://cdn.jsdelivr.net/npm/leaflet.locatecontrol@v0.74.0/dist/L.Control.Locate.min.js" charset="utf-8"></script>  
     <script src="https://npmcdn.com/leaflet@0.7.7/dist/leaflet.js"></script>
     <script src="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.js"></script>
-
+    <script>L_NO_TOUCH = true;</script>
+    
     <style>
         body {
             margin: 0;
@@ -127,7 +128,7 @@
        {
          map.removeLayer(posicion_actual);                                                          //Elimina la marca de la bolita azul anterior
          posicion_actual = L.marker([e.latlng.lat, e.latlng.lng], { icon: MiBola }).addTo(map);     //Coloca la bolita azul otra vez pero en nuestra posicion actual
-         nueva_posicion = e.latlng;
+         nueva_posicion = e.latlng;         
          map.setView (new L.LatLng(e.latlng.lat, e.latlng.lng), 15);
 
          if (posicion_inicio === "")
@@ -150,14 +151,14 @@
       var miDiv2 = document.getElementById('llegada'); 
       miDiv.innerHTML  = "<small>Recalculando...</small>"; 
       miDiv2.innerHTML = "<small></small>";
-
+      
       posicion_inicio = nueva_posicion;
       ruta();
-      var id = setInterval(locate, 5000)
+      var id = setInterval(locate, 6000)
     }
     
-    setInterval(actualizar_ruta, 40000);   //Cada 60seg paramos el tiempo de localizacion y actualizamos la ruta segun la posicion que nos encontremos
-    var id = setInterval(locate, 5000)
+    setInterval(actualizar_ruta, 60000);   //Cada 60seg paramos el tiempo de localizacion y actualizamos la ruta segun la posicion que nos encontremos
+    var id = setInterval(locate, 6000)
 </script>
 </body>
 </html>
