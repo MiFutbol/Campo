@@ -86,6 +86,8 @@
                                         L.latLng(posicion_inicio),    //punto de Origen                          
                                         L.latLng(lat_fin, lon_fin)    //punto de Destino
                                      ],
+                           lineOptions: {
+                              styles: [{color: 'blue', opacity: 1, weight: 7}]},
                            language: 'es',
                            fitSelectedRoutes: false,       //No hace el zoom para ver la ruta, deja el zoom que tenga
                            routeWhileDragging: true,       //No desplega el detalle de la ruta
