@@ -58,19 +58,11 @@
     var posicion_inicio = "";
     var routeControl = "";
     var nueva_posicion = "";
+    var contador;
 
     //osm layer
     var osm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {attribution: 'MiFutbol. Ver 3.0'});
-    osm.addTo(map);  
-
-    //Hora estima de llegada 
-    function addHoursToDate(objDate, intHours) 
-    {
-        var numberOfMlSeconds = objDate.getTime();
-        var addMlSeconds = (intHours * 60) * 60000;
-        var newDateObj = new Date(numberOfMlSeconds + addMlSeconds);
-        return newDateObj;
-    }
+    osm.addTo(map);
 
     //Redondeo decimales
     function redondearDecimales(numero, decimales) 
@@ -131,7 +123,13 @@
          posicion_actual = L.marker([e.latlng.lat, e.latlng.lng], { icon: MiBola }).addTo(map);     //Coloca la bolita azul otra vez pero en nuestra posicion actual
          nueva_posicion = e.latlng;         
          map.setView (new L.LatLng(e.latlng.lat, e.latlng.lng), 15);
-
+         contador++;
+           alert (contador);
+        if (contador === 10)
+        { alert ("act");
+            actualizar_ruta();
+         alert ("fin act");
+        }
          if (posicion_inicio === "")
            {
               posicion_inicio = e.latlng;
@@ -145,7 +143,7 @@
     //Actualizar ruta
     function actualizar_ruta() 
     {
-      clearInterval(id);
+    //  clearInterval(id);
       map.removeControl(routeControl);
   
       var miDiv = document.getElementById('resumen'); 
@@ -155,11 +153,12 @@
       
       posicion_inicio = nueva_posicion;
       ruta();
-      var id = setInterval(locate, 6000)
+      contador = 0;
+//      var id = setInterval(locate, 8000)
     }
     
-    setInterval(actualizar_ruta, 60000);   //Cada 60seg paramos el tiempo de localizacion y actualizamos la ruta segun la posicion que nos encontremos
-    var id = setInterval(locate, 6000)
+//    setInterval(actualizar_ruta, 60000);   //Cada 60seg paramos el tiempo de localizacion y actualizamos la ruta segun la posicion que nos encontremos
+    var id = setInterval(locate, 8000)
 </script>
 </body>
 </html>
