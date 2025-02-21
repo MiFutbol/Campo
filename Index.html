@@ -32,9 +32,9 @@
 </head>
 
 <body>   
-    <div style="text-align: center", id="resumen">Obteniendo posicion y ruta ...</div>
+    <div style="text-align: left;", id="resumen">Obteniendo posicion y ruta ...</div>
+    <div style="text-align: left;", id="llegada">Calculando hora llegada ...</div>
     <div  id="map"></div>
-    <div style="text-align: left;", id="llegada">Llegada aprox: </div>
     <script src="https://unpkg.com/leaflet@1.8.0/dist/leaflet.js"></script>
     <script src="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.js"></script>
 <script>
@@ -51,7 +51,7 @@
     const lon_ini = queryString.get("lon_ini");    
 
     // Map initialization 
-    var map = L.map('map').setView([lat_ini, lon_ini], 13);                                        //Parte del mapa que se ve al activar, que es el punto de origen
+    var map = L.map('map', {minZoom: 15, maxZoom: 15}).setView([lat_ini, lon_ini], 15);              //Parte del mapa que se ve al activar, que es el punto de origen
     var posicion_actual = L.marker([lat_ini, lon_ini], { icon: MiBola }).addTo(map);               //Coloca la bolita azul en el punto de partida que es tambien nuestra posicion actual
     var posicion_inicio = "";
 
@@ -84,7 +84,7 @@
     {
       var routeControl = L.Routing.control({
                            waypoints:[
-                              L.latLng(posicion_inicio),    //punto de Origen
+                              L.latLng(posicion_inicio),    //punto de Origen                          
                               L.latLng(lat_fin, lon_fin)    //punto de Destino
                                      ],
                            language: 'es',
@@ -106,7 +106,7 @@
                            const h = Math.floor(duracion / 3600);
                            const m = Math.floor(duracion % 3600 / 60);
                            duracion = (h > 0 ? h + " h " + (m < 10 ? "0" : "") : "") + m; 
-                           miDiv.innerHTML  = "Detalle: <strong>" + duracion + " min" + "</strong> <small>minutos</small> / <strong>" + redondearDecimales(distancia, 2) + "</strong> <small>Km</small>"; 
+                           miDiv.innerHTML  = "<small>Ruta: <strong>" + duracion + "</strong> min / <strong>" + redondearDecimales(distancia, 2) + "</strong> Km</small>"; 
                            
                            var fecha = new Date();
                            var aux = fecha.setHours(fecha.getHours() + h);
@@ -114,20 +114,20 @@
 //                           const hora = new Date(aux);
 //                           fecha = new Date(aux);
                            duracion = (fecha.getHours() > 0 ? fecha.getHours() + ":" + (fecha.getMinutes() < 10 ? "0" : "") : "00:") + fecha.getMinutes(); 
-                           miDiv2.innerHTML = "Llegada aprox: <strong>" + duracion + "</strong>";
+                           miDiv2.innerHTML = "<small>Llegada aprox: <strong>" + duracion + "  </strong></small>";
                         });
     }
 
     // wrap map.locate in a function    
     function locate() 
     {
-      map.locate({watch: true, maxZoom: 13});   //Localiza nuestra posicion actual
+      map.locate({watch: true, maxZoom: 15});   //Localiza nuestra posicion actual
       
       function onLocationFound(e) 
        {
          map.removeLayer(posicion_actual);                                                          //Elimina la marca de la bolita azul anterior
          posicion_actual = L.marker([e.latlng.lat, e.latlng.lng], { icon: MiBola }).addTo(map);     //Coloca la bolita azul otra vez pero en nuestra posicion actual
-         map.setView (new L.LatLng(e.latlng.lat, e.latlng.lng), 13);
+         map.setView (new L.LatLng(e.latlng.lat, e.latlng.lng), 15);
 
          if (posicion_inicio === "")
            {
