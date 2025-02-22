@@ -99,21 +99,6 @@
                            lineOptions: {
                               styles: [{color: 'blue', opacity: 1, weight: 7}]},
                            language: 'es',
-                           createMarker: function (i, posicion_inicio, n)
-                                                    {
-                                                    var marker_icon = null
-                                                    if (i == 1) 
-                                                       {
-                                                        // This is the first marker, indicating start
-                                                        marker_icon = SinIconoSalida
-                                                       } 
-                                                       else
-                                                       {
-                                                        //This is the last marker indicating destination
-                                                        marker_icon = SinIconoSalida
-                                                       }
-                                                    
-                                                    return marker},
                            fitSelectedRoutes: false,       //No hace el zoom para ver la ruta, deja el zoom que tenga
                            routeWhileDragging: true,  
                            showAlternatives: true,         //No desplega el detalle de la ruta, 
