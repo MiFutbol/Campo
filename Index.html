@@ -40,20 +40,22 @@
     <script src="https://unpkg.com/leaflet@1.8.0/dist/leaflet.js"></script>
     <script src="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.js"></script>
 <script>
-    var MiBola = L.icon
+    var Coche = L.icon
     ({
-      iconUrl: 'Img/circulo.png',
+      iconUrl: 'Img/coche.png',
       iconSize: [40, 40]
+    }) 
+
+    var iconoLlegada = L.icon
+    ({
+      iconUrl: 'Img/iconoLlegada.png',
+      iconSize: [60, 60]
     }) 
 
     var SinIconoSalida = new L.Icon
     ({
-      //iconUrl: 'Img/circulo.png', 
-      shadowUrl: '', 
-      iconSize: [40, 40],
-      //iconAnchor: [12, 41],
-      //popupAnchor: [1, -34],
-      //shadowSize: [41, 41]
+      iconUrl: 'Img/gps3.png',  
+      iconSize: [0, 0],
     });
 
     const queryString = new URLSearchParams(window.location.search);  
@@ -64,7 +66,7 @@
 
     // Map initialization 
     var map = L.map('map', {minZoom: 15, maxZoom: 15}).setView([lat_ini, lon_ini], 15);              //Parte del mapa que se ve al activar, que es el punto de origen
-    var posicion_actual = L.marker([lat_ini, lon_ini], { icon: MiBola }).addTo(map);                 //Coloca la bolita azul en el punto de partida que es tambien nuestra posicion actual
+    var posicion_actual = L.marker([lat_ini, lon_ini], { icon: Coche }).addTo(map);                 //Coloca la bolita azul en el punto de partida que es tambien nuestra posicion actual
     var posicion_inicio = "";
     var routeControl = "";
     var nueva_posicion = "";
@@ -91,13 +93,37 @@
     //Calculo de la ruta
     function ruta() 
     {
+      var start;
       routeControl = L.Routing.control({
                            waypoints:[
-                                        L.latLng(posicion_inicio),    //punto de Origen                          
+                                        posicion_inicio,              //punto de Origen 
                                         L.latLng(lat_fin, lon_fin)    //punto de Destino
                                      ],                           
-                           lineOptions: {
-                              styles: [{color: 'blue', opacity: 1, weight: 7}]},
+                           createMarker: function (i, posicion_inicio, n){
+                                        var marker_icon = null
+                                        if (i == 0) {
+                                            // Indica el inicio
+                                            marker_icon = SinIconoSalida
+                                        } else if (i == n -1) {
+                                            //Indica el final
+                                            marker_icon = iconoLlegada
+                                        }
+                                        var marker = L.marker (posicion_inicio.latLng, 
+                                        {
+                                                    draggable: true,
+                                                    bounceOnAdd: false,
+                                                    bounceOnAddOptions: {
+                                                        duration: 1000,
+                                                        height: 800, 
+                                                        function(){
+                                                            (bindPopup(myPopup).openOn(map))
+                                                        }
+                                                    },
+                                                    icon: marker_icon
+                                        })
+                                        return marker
+                                    },
+                           lineOptions: {styles: [{color: 'blue', opacity: 1, weight: 9}]},
                            language: 'es',
                            fitSelectedRoutes: false,       //No hace el zoom para ver la ruta, deja el zoom que tenga
                            routeWhileDragging: true,  
@@ -105,7 +131,7 @@
                            altLineOptions: { 
                                              styles: [ {color: 'black', opacity: 0.15, weight: 9}, 
                                                        {color: 'white', opacity: 0.8, weight: 6}, 
-                                                       {color: 'blue', opacity: 0.5, weight: 2}
+                                                       {color: 'blue', opacity: 0.5, weight: 3}
                                                       ]},
                            show: false
                         }).addTo(map); 
@@ -140,7 +166,7 @@
       function onLocationFound(e) 
        {
          map.removeLayer(posicion_actual);                                                          //Elimina la marca de la bolita azul anterior
-         posicion_actual = L.marker([e.latlng.lat, e.latlng.lng], { icon: MiBola }).addTo(map);     //Coloca la bolita azul otra vez pero en nuestra posicion actual
+         posicion_actual = L.marker([e.latlng.lat, e.latlng.lng], { icon: Coche }).addTo(map);     //Coloca la bolita azul otra vez pero en nuestra posicion actual
          nueva_posicion = e.latlng;         
          map.setView (new L.LatLng(e.latlng.lat, e.latlng.lng), 15);
            
