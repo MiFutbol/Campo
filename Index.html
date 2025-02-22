@@ -93,8 +93,7 @@
     //Calculo de la ruta
     function ruta() 
     {
-      var start;
-      routeControl = L.Routing.control({
+      var routeControl = L.Routing.control({
                            waypoints:[
                                         posicion_inicio,              //punto de Origen 
                                         L.latLng(lat_fin, lon_fin)    //punto de Destino
@@ -123,7 +122,7 @@
                                         })
                                         return marker
                                     },
-                           lineOptions: {styles: [{color: 'blue', opacity: 1, weight: 9}]},
+                           lineOptions: {styles: [{color: 'blue', opacity: 0.8, weight: 6}]},
                            language: 'es',
                            fitSelectedRoutes: false,       //No hace el zoom para ver la ruta, deja el zoom que tenga
                            routeWhileDragging: true,  
@@ -156,6 +155,15 @@
                                aux = fecha.setMinutes(fecha.getMinutes() + m);
                            duracion = (fecha.getHours() > 0 ? fecha.getHours() + ":" + (fecha.getMinutes() < 10 ? "0" : "") : "00:") + fecha.getMinutes(); 
                            miDiv2.innerHTML = "<small>Llegada aprox: <strong>" + duracion + "  </strong></small>";
+
+                           if (redondearDecimales(distancia, 2) < 0.1) 
+                             {
+                                clearinterval(timer);
+                                map.removeControl(routeControl);
+                                alert ("Has llegado a tu destino");
+                                miDiv.innerHTML  = "Gps MiFutbol";
+                                miDiv2.innerHTML = "Has llegado al campo de futbol";
+                             }
                         });
     }
    
@@ -173,6 +181,7 @@
          contador++;
          if (contador === 150)
            {
+             clearinterval(timer);
              actualizar_ruta();
            }
            
@@ -197,9 +206,10 @@
       posicion_inicio = nueva_posicion;
       ruta();
       contador = 0;
+      var timer = setInterval(locate, 8000);
     }
     
-    var id = setInterval(locate, 8000)
+    var timer = setInterval(locate, 8000)
 </script>
 </body>
 </html>
