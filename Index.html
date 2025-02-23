@@ -43,13 +43,13 @@
     var Coche = L.icon
     ({
       iconUrl: 'Img/coche.png',
-      iconSize: [40, 40]
+      iconSize: [30, 30]
     }) 
 
     var iconoLlegada = L.icon
     ({
       iconUrl: 'Img/iconoLlegada.png',
-      iconSize: [40, 40]
+      iconSize: [30, 30]
     }) 
 
     var SinIconoSalida = new L.Icon
@@ -65,7 +65,7 @@
     const lon_ini = queryString.get("lon_ini");    
 
     // Map initialization 
-    var map = L.map('map', {minZoom: 10, maxZoom: 12}).setView([lat_ini, lon_ini], 11);              //Parte del mapa que se ve al activar, que es el punto de origen
+    var map = L.map('map', {minZoom: 11, maxZoom: 14}).setView([lat_ini, lon_ini], 12);              //Parte del mapa que se ve al activar, que es el punto de origen
     var posicion_actual = L.marker([lat_ini, lon_ini], { icon: Coche }).addTo(map);                 //Coloca la bolita azul en el punto de partida que es tambien nuestra posicion actual
     var posicion_inicio = "";
     var routeControl = "";   
@@ -136,18 +136,18 @@
                            show: false
                         }).addTo(map); 
 
-      //Pone el valor del tiempo y distancia que se tardaria en la etiquita tiempo <div>
-      routeControl.on('routesfound', function(e) 
+       //Pone el valor del tiempo y distancia que se tardaria en la etiquita tiempo <div>
+       routeControl.on('routesfound', function(e) 
                         {
                            var routes = e.routes;
                            var summary = routes[0].summary;
                            var miDiv = document.getElementById('resumen'); 
                            var miDiv2 = document.getElementById('llegada');       
                            var distancia = summary.totalDistance / 1000;
-
                            var duracion = Number(summary.totalTime);
                            const h = Math.floor(duracion / 3600);
                            const m = Math.floor(duracion % 3600 / 60);
+
                            duracion = (h > 0 ? h + " h " + (m < 10 ? "0" : "") : "") + m; 
                            miDiv.innerHTML  = "<small>Ruta: <strong>" + duracion + "</strong> min / <strong>" + redondearDecimales(distancia, 2) + "</strong> Km</small>"; 
                            
@@ -155,11 +155,12 @@
                            var aux = fecha.setHours(fecha.getHours() + h);
                                aux = fecha.setMinutes(fecha.getMinutes() + m);
                            duracion = (fecha.getHours() > 0 ? fecha.getHours() + ":" + (fecha.getMinutes() < 10 ? "0" : "") : "00:") + fecha.getMinutes(); 
-                           miDiv2.innerHTML = "<small>Llegada aprox: <stron>" + duracion + "  </strong></small>";
+                           miDiv2.innerHTML = "<small>Llegada aprox: <strong>" + duracion + "  </strong></small>";
 
-                           if (redondearDecimales(distancia, 2) < 1) 
+                           if (distancia < 0.1) 
                              {
-                                clearinterval(timer);
+                                alert (distancia);
+//                                clearinterval(timer);
                                 map.removeControl(routeControl);
                                 alert ("Has llegado a tu destino");
                                 miDiv.innerHTML  = "Gps MiFutbol";
@@ -170,27 +171,23 @@
    
     function locate() 
     {
-      map.locate({watch: true, maxZoom: 11});                                                       //Localiza nuestra posicion actual
+      map.locate({watch: true, maxZoom: 14});                                                       //Localiza nuestra posicion actual
       
       function onLocationFound(e) 
        {
              map.removeLayer(posicion_actual);                                                          //Elimina la marca de la bolita azul anterior
              posicion_actual = L.marker([e.latlng.lat, e.latlng.lng], { icon: Coche }).addTo(map);     //Coloca la bolita azul otra vez pero en nuestra posicion actual
+
+             //Cuando ya no es la primera vez que se calcula la ruta, se guarda la posicion actual en inicio para cuando se haya el actualizar_ruta pille esa posicion
              if (posicion_inicio != "") 
                 {
                    posicion_inicio = e.latlng;
                 }
-         
-    //         nueva_posicion = e.latlng;         
-    //         map.setView (new L.LatLng(e.latlng.lat, e.latlng.lng), 11);
-
-     
-         //Marca para el inicio de la ruta
-         if (posicion_inicio == "")
-               {
-                  posicion_inicio = e.latlng;
-                  ruta();  
-               }            
+             else //Cuando es la primera vez que se calcula la ruta, if (posicion_inicio == "")
+                {
+                   posicion_inicio = e.latlng;
+                   ruta();  
+                }                         
        }
       map.on('locationfound', onLocationFound);
     }
@@ -205,6 +202,7 @@
       
 //      posicion_inicio = e.latlng;
       ruta();
+      map.setView (new L.LatLng(posicion_inicio.lat, posicion_inicio.lng), 11);
 //        alert("b");
 //      timer = setInterval(locate, 8000);
     }
