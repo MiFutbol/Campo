@@ -183,6 +183,7 @@
            {
              clearinterval(timer);
              actualizar_ruta();
+             var timer = setInterval(locate, 8000); 
            }
            
          if (posicion_inicio === "")
@@ -206,7 +207,6 @@
       posicion_inicio = nueva_posicion;
       ruta();
       contador = 0;
-      var timer = setInterval(locate, 8000);
     }
     
     var timer = setInterval(locate, 8000)
