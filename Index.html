@@ -49,7 +49,7 @@
     var iconoLlegada = L.icon
     ({
       iconUrl: 'Img/iconoLlegada.png',
-      iconSize: [60, 60]
+      iconSize: [40, 40]
     }) 
 
     var SinIconoSalida = new L.Icon
@@ -65,12 +65,13 @@
     const lon_ini = queryString.get("lon_ini");    
 
     // Map initialization 
-    var map = L.map('map', {minZoom: 15, maxZoom: 15}).setView([lat_ini, lon_ini], 15);              //Parte del mapa que se ve al activar, que es el punto de origen
+    var map = L.map('map', {minZoom: 10, maxZoom: 12}).setView([lat_ini, lon_ini], 11);              //Parte del mapa que se ve al activar, que es el punto de origen
     var posicion_actual = L.marker([lat_ini, lon_ini], { icon: Coche }).addTo(map);                 //Coloca la bolita azul en el punto de partida que es tambien nuestra posicion actual
     var posicion_inicio = "";
-    var routeControl = "";
-    var nueva_posicion = "";
-    var contador = 0;                                                                                //Contador para poder actualizar la ruta
+    var routeControl = "";   
+    var timer;
+    var timer_act;    
+//    var nueva_posicion = "";                                                                       //Contador para poder actualizar la ruta
 
     //osm layer
     var osm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {attribution: 'MiFutbol. Ver 3.0'});
@@ -93,7 +94,7 @@
     //Calculo de la ruta
     function ruta() 
     {
-      var routeControl = L.Routing.control({
+       routeControl = L.Routing.control({
                            waypoints:[
                                         posicion_inicio,              //punto de Origen 
                                         L.latLng(lat_fin, lon_fin)    //punto de Destino
@@ -169,47 +170,47 @@
    
     function locate() 
     {
-      map.locate({watch: true, maxZoom: 15});                                                       //Localiza nuestra posicion actual
+      map.locate({watch: true, maxZoom: 11});                                                       //Localiza nuestra posicion actual
       
       function onLocationFound(e) 
        {
-         map.removeLayer(posicion_actual);                                                          //Elimina la marca de la bolita azul anterior
-         posicion_actual = L.marker([e.latlng.lat, e.latlng.lng], { icon: Coche }).addTo(map);     //Coloca la bolita azul otra vez pero en nuestra posicion actual
-         nueva_posicion = e.latlng;         
-         map.setView (new L.LatLng(e.latlng.lat, e.latlng.lng), 15);
-           
-         contador++;
-         if (contador === 150)
-           {
-          //   clearinterval(timer);
-             actualizar_ruta();
-          //   var timer = setInterval(locate, 8000); 
-           }
-           
-         if (posicion_inicio === "")
-           {
-              posicion_inicio = e.latlng;
-              ruta();  
-           } 
-       
+             map.removeLayer(posicion_actual);                                                          //Elimina la marca de la bolita azul anterior
+             posicion_actual = L.marker([e.latlng.lat, e.latlng.lng], { icon: Coche }).addTo(map);     //Coloca la bolita azul otra vez pero en nuestra posicion actual
+             if (posicion_inicio != "") 
+                {
+                   posicion_inicio = e.latlng;
+                }
+         
+    //         nueva_posicion = e.latlng;         
+    //         map.setView (new L.LatLng(e.latlng.lat, e.latlng.lng), 11);
+
+     
+         //Marca para el inicio de la ruta
+         if (posicion_inicio == "")
+               {
+                  posicion_inicio = e.latlng;
+                  ruta();  
+               }            
        }
       map.on('locationfound', onLocationFound);
     }
-
+    
+    //OBSOLETO 
     //Actualizar ruta
     function actualizar_ruta() 
     {
+//        alert("a");
+//      clearinterval(timer);     
       map.removeControl(routeControl);
-  
-      var miDiv = document.getElementById('resumen'); 
-      miDiv.innerHTML  = "<small>Recalculando...</small>"; 
       
-      posicion_inicio = nueva_posicion;
+//      posicion_inicio = e.latlng;
       ruta();
-      contador = 0;
+//        alert("b");
+//      timer = setInterval(locate, 8000);
     }
     
-    var timer = setInterval(locate, 8000)
+     timer = setInterval(locate, 8000);
+     timer_act = setInterval(actualizar_ruta, 20000);
 </script>
 </body>
 </html>
