@@ -52,6 +52,12 @@
       iconSize: [30, 30]
     }) 
 
+    var iconoFinalViaje = L.icon
+    ({
+      iconUrl: 'Img/final_viaje.png',
+      iconSize: [30, 30]
+    }) 
+
     var SinIconoSalida = new L.Icon
     ({
       iconUrl: 'Img/gps3.png',  
@@ -62,16 +68,19 @@
     const lat_fin = queryString.get("lat_fin");    
     const lon_fin = queryString.get("lon_fin");    
     const lat_ini = queryString.get("lat_ini");    
-    const lon_ini = queryString.get("lon_ini");    
-
+    const lon_ini = queryString.get("lon_ini");   
+    
     // Map initialization 
     var map = L.map('map', {minZoom: 11, maxZoom: 14}).setView([lat_ini, lon_ini], 12);              //Parte del mapa que se ve al activar, que es el punto de origen
     var posicion_actual = L.marker([lat_ini, lon_ini], { icon: Coche }).addTo(map);                 //Coloca la bolita azul en el punto de partida que es tambien nuestra posicion actual
+    var Div_resumen = document.getElementById('resumen'); 
+    var Div_llegada = document.getElementById('llegada');       
     var posicion_inicio = "";
     var routeControl = "";   
     var timer;
     var timer_act;    
-//    var nueva_posicion = "";                                                                       //Contador para poder actualizar la ruta
+    var currentZoom; 
+    var distancia;
 
     //osm layer
     var osm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {attribution: 'MiFutbol. Ver 3.0'});
@@ -141,42 +150,51 @@
                         {
                            var routes = e.routes;
                            var summary = routes[0].summary;
-                           var miDiv = document.getElementById('resumen'); 
-                           var miDiv2 = document.getElementById('llegada');       
-                           var distancia = summary.totalDistance / 1000;
+//                           var miDiv = document.getElementById('resumen'); 
+//                           var miDiv2 = document.getElementById('llegada');       
+                           distancia = summary.totalDistance / 1000;
                            var duracion = Number(summary.totalTime);
                            const h = Math.floor(duracion / 3600);
                            const m = Math.floor(duracion % 3600 / 60);
 
                            duracion = (h > 0 ? h + " h " + (m < 10 ? "0" : "") : "") + m; 
-                           miDiv.innerHTML  = "<small>Ruta: <strong>" + duracion + "</strong> min / <strong>" + redondearDecimales(distancia, 2) + "</strong> Km</small>"; 
+                           Div_resumen.innerHTML  = "<small>Ruta: <strong>" + duracion + "</strong> min / <strong>" + redondearDecimales(distancia, 2) + "</strong> Km</small>"; 
                            
                            var fecha = new Date();
                            var aux = fecha.setHours(fecha.getHours() + h);
                                aux = fecha.setMinutes(fecha.getMinutes() + m);
                            duracion = (fecha.getHours() > 0 ? fecha.getHours() + ":" + (fecha.getMinutes() < 10 ? "0" : "") : "00:") + fecha.getMinutes(); 
-                           miDiv2.innerHTML = "<small>Llegada aprox: <strong>" + duracion + "  </strong></small>";
+                           Div_llegada.innerHTML = "<small>Llegada aprox: <strong>" + duracion + "  </strong></small>            <button id='pepe'>pepe</button";
 
                            if (distancia < 0.1) 
                              {
-                                alert (distancia);
-//                                clearinterval(timer);
+                                clearTimeout (timer);
+                                clearTimeout (timer_act);
+
                                 map.removeControl(routeControl);
-                                alert ("Has llegado a tu destino");
-                                miDiv.innerHTML  = "Gps MiFutbol";
-                                miDiv2.innerHTML = "Has llegado al campo de futbol";
-                             }
+                                alert ("Has llegado al campo de futbol");
+                                Div_resumen.innerHTML  = "Gps MiFutbol";
+                                Div_llegada.innerHTML = "Has llegado al campo de futbol";
+                            }
                         });
     }
    
     function locate() 
     {
       map.locate({watch: true, maxZoom: 14});                                                       //Localiza nuestra posicion actual
-      
+      currentZoom = map.getZoom();
+
       function onLocationFound(e) 
        {
              map.removeLayer(posicion_actual);                                                          //Elimina la marca de la bolita azul anterior
-             posicion_actual = L.marker([e.latlng.lat, e.latlng.lng], { icon: Coche }).addTo(map);     //Coloca la bolita azul otra vez pero en nuestra posicion actual
+             if (distancia < 0.1)
+               {
+                  posicion_actual = L.marker([e.latlng.lat, e.latlng.lng], { icon: iconoFinalViaje }).addTo(map);     //Coloca la bolita azul otra vez pero en nuestra posicion actual
+               }
+               else
+               {
+                  posicion_actual = L.marker([e.latlng.lat, e.latlng.lng], { icon: Coche }).addTo(map);
+               }   
 
              //Cuando ya no es la primera vez que se calcula la ruta, se guarda la posicion actual en inicio para cuando se haya el actualizar_ruta pille esa posicion
              if (posicion_inicio != "") 
@@ -196,15 +214,16 @@
     //Actualizar ruta
     function actualizar_ruta() 
     {
-//        alert("a");
-//      clearinterval(timer);     
+      Div_resumen.innerHTML = "<small> Actualizando ruta </small>";
+//      Div_llegada.innerHTML = "<small> Llegada aprox: <strong> actualizando...</strong></small>";
+
+      clearTimeout(timer_act);     
       map.removeControl(routeControl);
       
-//      posicion_inicio = e.latlng;
       ruta();
-      map.setView (new L.LatLng(posicion_inicio.lat, posicion_inicio.lng), 11);
-//        alert("b");
-//      timer = setInterval(locate, 8000);
+      map.setView (new L.LatLng(posicion_inicio.lat, posicion_inicio.lng), currentZoom);
+
+      timer_act = setInterval(actualizar_ruta, 20000); 
     }
     
      timer = setInterval(locate, 8000);
