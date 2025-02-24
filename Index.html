@@ -224,17 +224,19 @@
     {
       Div_resumen.innerHTML = "<small> Actualizando ruta </small>";
 
-      clearTimeout(timer_act);     
+      clearTimeout(timer_act);    
+      clearTimeout (timer);
       map.removeControl(routeControl);
       
       ruta();
       map.setView (new L.LatLng(posicion_inicio.lat, posicion_inicio.lng), currentZoom);
 
-      timer_act = setInterval(actualizar_ruta, 20000); 
+      timer_act = setInterval(actualizar_ruta, 60000); 
+      timer = setInterval (locate, 8000);
     }
     
      timer = setInterval(locate, 8000);
-     timer_act = setInterval(actualizar_ruta, 20000);
+     timer_act = setInterval(actualizar_ruta, 60000);
 </script>
 </body>
 </html>
