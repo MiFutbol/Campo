@@ -18,7 +18,7 @@
     <script src="https://cdn.jsdelivr.net/npm/leaflet.locatecontrol@v0.74.0/dist/L.Control.Locate.min.js" charset="utf-8"></script>  
     <script src="https://npmcdn.com/leaflet@0.7.7/dist/leaflet.js"></script>
     <script src="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.js"></script>
-    <script>L_NO_TOUCH = true;</script>
+    <script>L_NO_TOUCH = false;</script>
 
     <style>
         body {
@@ -34,6 +34,7 @@
 </head>
 
 <body>   
+    <input hidden=true, type="button" id="btn1" value="Actualizar" onclick="Refrescar()">
     <div style="text-align: left;", id="resumen"><small>Obteniendo posicion y ruta ...</small></div>
     <div style="text-align: left;", id="llegada"><small>Calculando hora llegada ...</small></div>
     <div  id="map"></div>
@@ -71,10 +72,11 @@
     const lon_ini = queryString.get("lon_ini");   
     
     // Map initialization 
-    var map = L.map('map', {minZoom: 11, maxZoom: 14}).setView([lat_ini, lon_ini], 12);              //Parte del mapa que se ve al activar, que es el punto de origen
+    var map = L.map('map', {minZoom: 11, maxZoom: 15}).setView([lat_ini, lon_ini], 12);              //Parte del mapa que se ve al activar, que es el punto de origen
     var posicion_actual = L.marker([lat_ini, lon_ini], { icon: Coche }).addTo(map);                 //Coloca la bolita azul en el punto de partida que es tambien nuestra posicion actual
     var Div_resumen = document.getElementById('resumen'); 
-    var Div_llegada = document.getElementById('llegada');       
+    var Div_llegada = document.getElementById('llegada');  
+    var Div_btn = document.getElementById("btn1");
     var posicion_inicio = "";
     var routeControl = "";   
     var timer;
@@ -164,8 +166,9 @@
                            var aux = fecha.setHours(fecha.getHours() + h);
                                aux = fecha.setMinutes(fecha.getMinutes() + m);
                            duracion = (fecha.getHours() > 0 ? fecha.getHours() + ":" + (fecha.getMinutes() < 10 ? "0" : "") : "00:") + fecha.getMinutes(); 
-                           Div_llegada.innerHTML = "<small>Llegada aprox: <strong>" + duracion + "  </strong></small>            <button id='pepe'>pepe</button";
+                           Div_llegada.innerHTML = "<small>Llegada aprox: <strong>" + duracion + "  </strong></small>";
 
+                           Div_btn.hidden = false;     
                            if (distancia < 0.1) 
                              {
                                 clearTimeout (timer);
@@ -181,7 +184,7 @@
    
     function locate() 
     {
-      map.locate({watch: true, maxZoom: 14});                                                       //Localiza nuestra posicion actual
+      map.locate({watch: true, maxZoom: 15});                                                       //Localiza nuestra posicion actual
       currentZoom = map.getZoom();
 
       function onLocationFound(e) 
@@ -209,13 +212,17 @@
        }
       map.on('locationfound', onLocationFound);
     }
-    
-    //OBSOLETO 
+
+    //Click en el boton actualizar
+    function Refrescar() 
+    {
+      actualizar_ruta();
+    }    
+
     //Actualizar ruta
     function actualizar_ruta() 
     {
       Div_resumen.innerHTML = "<small> Actualizando ruta </small>";
-//      Div_llegada.innerHTML = "<small> Llegada aprox: <strong> actualizando...</strong></small>";
 
       clearTimeout(timer_act);     
       map.removeControl(routeControl);
