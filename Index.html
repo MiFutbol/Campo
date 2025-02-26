@@ -136,7 +136,7 @@
                                         })
                                         return marker
                                     },
-                           lineOptions: {styles: [{color: 'blue', opacity: 0.8, weight: 3}]},
+                           lineOptions: {styles: [{color: 'blue', opacity: 0.6, weight: 6}]},
                            language: 'es',
                            fitSelectedRoutes: false,       //No hace el zoom para ver la ruta, deja el zoom que tenga
                            routeWhileDragging: true,  
@@ -144,7 +144,7 @@
                            altLineOptions: { 
                                              styles: [ {color: 'black', opacity: 0.15, weight: 9}, 
                                                        {color: 'white', opacity: 0.8, weight: 6}, 
-                                                       {color: 'blue', opacity: 0.15, weight: 9}
+                                                       {color: 'blue', opacity: 0.3, weight: 2}
                                                       ]},
                            show: false
                         }).addTo(map); 
@@ -166,6 +166,7 @@
                            var aux = fecha.setHours(fecha.getHours() + h);
                                aux = fecha.setMinutes(fecha.getMinutes() + m);
                            duracion = (fecha.getHours() > 0 ? fecha.getHours() + ":" + (fecha.getMinutes() < 10 ? "0" : "") : "00:") + fecha.getMinutes(); 
+                           Div_llegada.innerHTML = "<small>Llegada aprox: <strong>" + duracion + "  </strong></small>";
 
                            Div_btn.hidden = false;     
                            if (distancia < 0.1) 
