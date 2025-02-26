@@ -72,7 +72,7 @@
     const lon_ini = queryString.get("lon_ini");   
     
     // Map initialization 
-    var map = L.map('map', {minZoom: 13, maxZoom: 13}).setView([lat_ini, lon_ini], 13);              //Parte del mapa que se ve al activar, que es el punto de origen
+    var map = L.map('map', {minZoom: 14, maxZoom: 14}).setView([lat_ini, lon_ini], 14);              //Parte del mapa que se ve al activar, que es el punto de origen
     var Mi_marca = new L.Marker(map.getCenter(), { icon: Coche }).addTo(map);
     var Div_resumen = document.getElementById('resumen'); 
     var Div_llegada = document.getElementById('llegada');  
@@ -136,7 +136,7 @@
                                         })
                                         return marker
                                     },
-                           lineOptions: {styles: [{color: 'blue', opacity: 0.8, weight: 6}]},
+                           lineOptions: {styles: [{color: 'blue', opacity: 0.8, weight: 3}]},
                            language: 'es',
                            fitSelectedRoutes: false,       //No hace el zoom para ver la ruta, deja el zoom que tenga
                            routeWhileDragging: true,  
@@ -144,7 +144,7 @@
                            altLineOptions: { 
                                              styles: [ {color: 'black', opacity: 0.15, weight: 9}, 
                                                        {color: 'white', opacity: 0.8, weight: 6}, 
-                                                       {color: 'blue', opacity: 0.3, weight: 2}
+                                                       {color: 'blue', opacity: 0.15, weight: 9}
                                                       ]},
                            show: false
                         }).addTo(map); 
@@ -152,25 +152,20 @@
        //Pone el valor del tiempo y distancia que se tardaria en la etiquita tiempo <div>
        routeControl.on('routesfound', function(e) 
                         {
-                            alert("1");
                            var routes = e.routes;
                            var summary = routes[0].summary;
                            distancia = summary.totalDistance / 1000;
                            var duracion = Number(summary.totalTime);
                            const h = Math.floor(duracion / 3600);
                            const m = Math.floor(duracion % 3600 / 60);
-                            alert("2");
 
                            duracion = (h > 0 ? h + " h " + (m < 10 ? "0" : "") : "") + m; 
                            Div_resumen.innerHTML  = "<small>Ruta: <strong>" + duracion + "</strong> min / <strong>" + redondearDecimales(distancia, 2) + "</strong> Km</small>"; 
-                            alert("3");
                            
                            var fecha = new Date();
                            var aux = fecha.setHours(fecha.getHours() + h);
                                aux = fecha.setMinutes(fecha.getMinutes() + m);
                            duracion = (fecha.getHours() > 0 ? fecha.getHours() + ":" + (fecha.getMinutes() < 10 ? "0" : "") : "00:") + fecha.getMinutes(); 
-                           Div_llegada.innerHTML = "<small>Llegada aprox: <strong>" + duracion + "  </strong></small>";
-                            alert("4");
 
                            Div_btn.hidden = false;     
                            if (distancia < 0.1) 
@@ -188,7 +183,7 @@
    
     function locate() 
     {
-      map.locate({watch: true, maxZoom: 13});                                                       //Localiza nuestra posicion actual
+      map.locate({watch: true, maxZoom: 14});                                                       //Localiza nuestra posicion actual
       currentZoom = map.getZoom();
 
       function onLocationFound(e) 
