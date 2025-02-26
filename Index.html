@@ -109,7 +109,7 @@
     {
        routeControl = L.Routing.control({
                            waypoints:[
-                                        posicion_inicio,              //punto de Origen 
+                                        L.latLng(posicion_inicio),              //punto de Origen 
                                         L.latLng(lat_fin, lon_fin)    //punto de Destino
                                      ],                           
                            createMarker: function (i, posicion_inicio, n){
@@ -144,7 +144,7 @@
                            altLineOptions: { 
                                              styles: [ {color: 'black', opacity: 0.15, weight: 9}, 
                                                        {color: 'white', opacity: 0.8, weight: 6}, 
-                                                       {color: 'blue', opacity: 0.5, weight: 3}
+                                                       {color: 'blue', opacity: 0.3, weight: 2}
                                                       ]},
                            show: false
                         }).addTo(map); 
