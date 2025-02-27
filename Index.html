@@ -72,7 +72,7 @@
     const lon_ini = queryString.get("lon_ini");   
     
     // Map initialization 
-    var map = L.map('map', {minZoom: 14, maxZoom: 14}).setView([lat_ini, lon_ini], 14);              //Parte del mapa que se ve al activar, que es el punto de origen
+    var map = L.map('map', {minZoom: 14, maxZoom: 17}).setView([lat_ini, lon_ini], 14);              //Parte del mapa que se ve al activar, que es el punto de origen
     var Mi_marca = new L.Marker(map.getCenter(), { icon: Coche }).addTo(map);
     var Div_resumen = document.getElementById('resumen'); 
     var Div_llegada = document.getElementById('llegada');  
@@ -126,7 +126,7 @@
                                                     draggable: true,
                                                     bounceOnAdd: false,
                                                     bounceOnAddOptions: {
-                                                        duration: 1000,
+                                                         duration: 1000,
                                                         height: 800, 
                                                         function(){
                                                             (bindPopup(myPopup).openOn(map))
@@ -184,7 +184,7 @@
    
     function locate() 
     {
-      map.locate({watch: true, maxZoom: 14});                                                       //Localiza nuestra posicion actual
+      map.locate({watch: true, maxZoom: 17});                                                       //Localiza nuestra posicion actual
       currentZoom = map.getZoom();
 
       function onLocationFound(e) 
@@ -224,7 +224,7 @@
     }
     
     timer = setInterval(locate, 1000);
-    timer_act = setInterval(actualizar_ruta, 60000);
+//#    timer_act = setInterval(actualizar_ruta, 60000);
 </script>
 </body>
 </html>
