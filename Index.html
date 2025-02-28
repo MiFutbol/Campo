@@ -36,7 +36,7 @@
 <body>   
 <!--    <input hidden=false, type="button" id="btn_update" value="Actualizar viaje" onclick="actualizar_ruta()"> -->
 <!--     <div style="text-align: left;", id="resumen"><small>Obteniendo posicion y ruta ...</small></div>  -->
-    <label  style="text-align: left;", id="llegada"><small>Obteniendo ruta y hora llegada ...</small></label >
+    <label  style="text-align: left;", id="llegada"><small>GPS MiFutbol</small></label >
     <div  id="map"></div>
     <script src="https://unpkg.com/leaflet@1.8.0/dist/leaflet.js"></script>
     <script src="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.js"></script>
@@ -115,6 +115,7 @@ function localizar()
       
       if (mi_posicino_lat == "")
         {
+           Div_llegada.innerHTML  = "Obteniendo posicion, ruta y duracion ...";
            mi_posicino_lat = e.latlng.lat;
 
            //Ruta principal. La que se muestra por primera vez sin haber iniciado la misma
@@ -135,14 +136,17 @@ function localizar()
             L.Routing.errorControl(routingControl).addTo(map);
 
         }
+        else
+        {
+           var newWaypoint = routingControl.getWaypoints()[0].latLng;          //Captura
+           var newLat = e.latlng.lat;
+           var newLng = e.latlng.lng;
+           routingControl.setWaypoints([
+                                         L.latLng(newLat, newLng),              //Nuevo origen
+                                         routingControl.options.waypoints[1]    //Mismo destino
+                                      ]);          
+        }
 
-      var newWaypoint = routingControl.getWaypoints()[0].latLng;          //Captura
-      var newLat = e.latlng.lat;
-      var newLng = e.latlng.lng;
-      routingControl.setWaypoints([
-                                     L.latLng(newLat, newLng),              //Nuevo origen
-                                     routingControl.options.waypoints[1]    //Mismo destino
-                                  ]);          
   //Calcula el tiempo y distancia que falta  desde nuestra posicion 
   routingControl.on('routesfound', function(e) 
                 {
