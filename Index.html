@@ -72,159 +72,68 @@
     const lon_ini = queryString.get("lon_ini");   
     
     // Map initialization 
-    var map = L.map('map', {minZoom: 14, maxZoom: 17}).setView([lat_ini, lon_ini], 14);              //Parte del mapa que se ve al activar, que es el punto de origen
-    var Mi_marca = new L.Marker(map.getCenter(), { icon: Coche }).addTo(map);
+    var map = L.map('map', {minZoom: 10, maxZoom: 16}).setView([lat_ini, lon_ini], 13);              //Parte del mapa que se ve al activar, que es el punto de origen
+    var mi_posicino_lat = lat_ini;
+    var mi_posicino_lng = lon_ini;
     var Div_resumen = document.getElementById('resumen'); 
     var Div_llegada = document.getElementById('llegada');  
     var Div_btn = document.getElementById("btn_update");
-    var posicion_inicio = "";
     var routeControl = "";   
     var timer;
     var timer_act;   
     var distancia;
 
-    //osm layer
-    var osm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {attribution: 'MiFutbol. Ver 3.0'});
-    osm.addTo(map);
+L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+}).addTo(map);
 
-    Mi_marca.setLatLng([lat_ini, lon_ini]);
-    map.panTo([lat_ini, lon_ini]);
 
-    //Redondeo decimales
-    function redondearDecimales(numero, decimales) 
-    {
-        numeroRegexp = new RegExp('\\d\\.(\\d){' + decimales + ',}');                                // Expresion regular para numeros con un cierto numero de decimales o mas
-        if (numeroRegexp.test(numero)) 
-           {                                                                                         // Ya que el numero tiene el numero de decimales requeridos o mas, se realiza el redondeo
-             return Number(numero.toFixed(decimales));
-           } 
-           else 
-           {
-             return Number(numero.toFixed(decimales)) === 0 ? 0 : numero;                             // En valores muy bajos, se comprueba si el numero es 0 (con el redondeo deseado), si no lo es se devuelve el numero otra vez.
-           }  
-    }
+var Mi_marca = new L.Marker(map.getCenter(), {icon: Coche}).addTo(map);
+var Marca_campo = new L.Marker([lat_fin, lon_fin], {icon: iconoLlegada}).addTo(map);
 
-    //Calculo de la ruta
-    function ruta() 
-    {
-       routeControl = L.Routing.control({
-                           waypoints:[
-                                        posicion_inicio,              //punto de Origen 
-                                        L.latLng(lat_fin, lon_fin)    //punto de Destino
-                                     ],                           
-                           createMarker: function (i, posicion_inicio, n){
-                                        var marker_icon = null
-                                        if (i == 0) {
-                                            // Indica el inicio
-                                            marker_icon = SinIconoSalida
-                                        } else if (i == n -1) {
-                                            //Indica el final
-                                            marker_icon = iconoLlegada
-                                        }
-                                        var marker = L.marker (posicion_inicio.latLng, 
-                                        {
-                                                    draggable: true,
-                                                    bounceOnAdd: false,
-                                                    bounceOnAddOptions: {
-                                                         duration: 1000,
-                                                        height: 800, 
-                                                        function(){
-                                                            (bindPopup(myPopup).openOn(map))
-                                                        }
-                                                    },
-                                                    icon: marker_icon
-                                        })
-                                        return marker
-                                    },
-                           lineOptions: {styles: [{color: 'blue', opacity: 0.6, weight: 6}]},
-                           language: 'es',
-                           fitSelectedRoutes: false,       //No hace el zoom para ver la ruta, deja el zoom que tenga
-                           routeWhileDragging: true,  
-                           showAlternatives: true,         //No desplega el detalle de la ruta, 
-                           altLineOptions: { 
-                                             styles: [ {color: 'black', opacity: 0.15, weight: 9}, 
-                                                       {color: 'white', opacity: 0.8, weight: 6}, 
-                                                       {color: 'blue', opacity: 0.3, weight: 2}
-                                                      ]},
-                           show: false
-                        }).addTo(map); 
+function locate() 
+{
+  map.locate({watch: true, maxZoom: 16});                                                       //Localiza nuestra posicion actual
 
-       //Pone el valor del tiempo y distancia que se tardaria en la etiquita tiempo <div>
-       routeControl.on('routesfound', function(e) 
-                        {
-                           var routes = e.routes;
-                           var summary = routes[0].summary;
-                           distancia = summary.totalDistance / 1000;
-                           var duracion = Number(summary.totalTime);
-                           const h = Math.floor(duracion / 3600);
-                           const m = Math.floor(duracion % 3600 / 60);
-
-                           duracion = (h > 0 ? h + " h " + (m < 10 ? "0" : "") : "") + m; 
-                           Div_resumen.innerHTML  = "<small>Ruta: <strong>" + duracion + "</strong> min / <strong>" + redondearDecimales(distancia, 2) + "</strong> Km</small>"; 
-                           
-                           var fecha = new Date();
-                           var aux = fecha.setHours(fecha.getHours() + h);
-                               aux = fecha.setMinutes(fecha.getMinutes() + m);
-                           duracion = (fecha.getHours() > 0 ? fecha.getHours() + ":" + (fecha.getMinutes() < 10 ? "0" : "") : "00:") + fecha.getMinutes(); 
-                           Div_llegada.innerHTML = "<small>Llegada aprox: <strong>" + duracion + "  </strong></small>";
-
-                           Div_btn.hidden = false;     
-                           if (distancia < 0.1) 
-                             {
-                                clearTimeout (timer);
-                                clearTimeout (timer_act);
-
-                                map.removeControl(routeControl);
-                                alert ("Has llegado al campo de futbol");
-                                Div_resumen.innerHTML  = "Gps MiFutbol";
-                                Div_llegada.innerHTML = "Has llegado al campo de futbol";
-                            }
-                        });
-    }
-   
-    function locate() 
-    {
-      map.locate({watch: true, maxZoom: 17});                                                       //Localiza nuestra posicion actual
-      currentZoom = map.getZoom();
-
-      function onLocationFound(e) 
-       {
-          Mi_marca.setLatLng([e.latlng.lat, e.latlng.lng]);
-          map.panTo([e.latlng.lat, e.latlng.lng])       
-
-         //Cuando ya no es la primera vez que se calcula la ruta, se guarda la posicion actual en inicio para cuando se haya el actualizar_ruta pille esa posicion
-         if (posicion_inicio != "") 
-            {
-               posicion_inicio = e.latlng;
-            }
-         else //Cuando es la primera vez que se calcula la ruta, if (posicion_inicio == "")
-            {
-               posicion_inicio = e.latlng;
-               ruta();  
-            }                         
-       }
-      map.on('locationfound', onLocationFound);
-    }
-
-    //Actualizar ruta
-    function actualizar_ruta() 
-    {
-      Div_resumen.innerHTML = "<small> Actualizando ruta </small>";
-
-//      clearTimeout(timer_act);    
-      clearTimeout (timer);
-      map.removeControl(routeControl);
+  function onLocationFound(e) 
+   {
+      Mi_marca.setLatLng([e.latlng.lat, e.latlng.lng]);
+      map.panTo([e.latlng.lat, e.latlng.lng])     
       
-      ruta();
-      map.panTo([posicion_inicio.lat, posicion_inicio.lng])
-//      map.setView (new L.LatLng(posicion_inicio.lat, posicion_inicio.lng), currentZoom);
+      mi_posicino_lat = e.latlng.lat;
+      mi_posicino_lng = e.latlng.lng;                    
+   }
+  map.on('locationfound', onLocationFound);
+}
 
-//      timer_act = setInterval(actualizar_ruta, 60000); 
-      timer = setInterval (locate, 1000);
-    }
-locate();    
-//    timer = setInterval(locate, 1000);
-//#    timer_act = setInterval(actualizar_ruta, 60000);
+
+var routingControl = L.Routing.control({
+    waypoints: [
+        L.latLng(lat_ini, lon_ini),   //Oringen 
+        L.latLng(lat_fin, lon_fin)    //Destino
+    ],
+    createMarker: function() { return null; },
+    routeWhileDragging: false,
+    draggableWaypoints: false,
+    reverseWaypoints: false,
+    fitSelectedRoutes: true,
+    addWaypoints: true
+}).addTo(map);
+
+L.Routing.errorControl(routingControl).addTo(map);
+
+setInterval(locate, 1000);
+
+setInterval(function () {
+    var newWaypoint = routingControl.getWaypoints()[0].latLng;          //Captura
+    var newLat = mi_posicino_lat;
+    var newLng = mi_posicino_lng;
+    routingControl.setWaypoints([
+                                 L.latLng(newLat, newLng),              //Nuevo origen
+                                 routingControl.options.waypoints[1]    //Mismo destino
+                               ]);
+}, 1000);
+
 </script>
 </body>
 </html>
