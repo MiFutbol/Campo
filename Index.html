@@ -86,7 +86,7 @@ L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
 
 
 var Marca_campo = new L.Marker([lat_fin, lon_fin], {icon: iconoLlegada}).addTo(map);
-var Mi_marca = new L.Marker([lat_fin, lon_fin], {icon: SinIconoSalida}).addTo(map);
+var Mi_marca = new L.Marker([lat_fin, lon_fin]).addTo(map);
 
 //Redondeo decimales
 function redondearDecimales(numero, decimales) 
@@ -111,7 +111,6 @@ function localizar()
    {
 
       Mi_marca.setLatLng([e.latlng.lat, e.latlng.lng]);
-      Mi_marca.icon = null;
       map.panTo([e.latlng.lat, e.latlng.lng])     
       
       if (mi_posicino_lat == "")
