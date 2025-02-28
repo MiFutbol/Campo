@@ -111,23 +111,24 @@ var routingControl = L.Routing.control({
         L.latLng(lat_fin, lon_fin)    //Destino
     ],
     createMarker: function() { return null; },
+    lineOptions: {styles: [{color: 'blue', opacity: 0.6, weight: 2}]},
+    language: 'es',
     routeWhileDragging: true,
     draggableWaypoints: false,
-    reverseWaypoints: false,
-    fitSelectedRoutes: true,
-    addWaypoints: true,
+    fitSelectedRoutes: true,   //Se autoajusta el mapa a la vista
+    addWaypoints: false,
     show : false
 }).addTo(map);
 
 //Localizacion de donde estoy
 function localizar() 
 {
-  map.locate({watch: true, maxZoom: 16});                                                       //Localiza nuestra posicion actual
+  map.locate({watch: false, maxZoom: 16});                                                       //Localiza nuestra posicion actual
 
   function onLocationFound(e) 
    {
       Mi_marca.setLatLng([e.latlng.lat, e.latlng.lng]);
-//      map.panTo([e.latlng.lat, e.latlng.lng])     
+      map.panTo([e.latlng.lat, e.latlng.lng])     
       
       mi_posicino_lat = e.latlng.lat;
       mi_posicino_lng = e.latlng.lng;                    
