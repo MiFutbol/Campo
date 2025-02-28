@@ -118,7 +118,7 @@ function localizar()
       }
 
       Mi_marca.setLatLng([e.latlng.lat, e.latlng.lng]);
-      map.panTo([e.latlng.lat, e.latlng.lng])     
+//      map.panTo([e.latlng.lat, e.latlng.lng])     
       
       mi_posicino_lat = e.latlng.lat;
       mi_posicino_lng = e.latlng.lng;                    
@@ -186,7 +186,7 @@ var routingControl = L.Routing.control({
     language: 'es',
     routeWhileDragging: true,
     draggableWaypoints: false,
-    fitSelectedRoutes: false,   //Se autoajusta el mapa a la vista
+    fitSelectedRoutes: true,   //Se autoajusta el mapa a la vista
     addWaypoints: false,
     show : false
 }).addTo(map);
