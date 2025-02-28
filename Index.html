@@ -72,7 +72,7 @@
     const lon_ini = queryString.get("lon_ini");   
     
     // Map initialization 
-    var map = L.map('map', {minZoom: 10, maxZoom: 16}).setView([lat_ini, lon_ini], 13);              //Parte del mapa que se ve al activar, que es el punto de origen
+    var map = L.map('map', {minZoom: 11, maxZoom: 19}).setView([lat_ini, lon_ini], 17);              //Parte del mapa que se ve al activar, que es el punto de origen
     var mi_posicino_lat = lat_ini;
     var mi_posicino_lng = lon_ini;
     var Div_resumen = document.getElementById('resumen'); 
@@ -123,7 +123,7 @@ var routingControl = L.Routing.control({
 //Localizacion de donde estoy
 function localizar() 
 {
-  map.locate({watch: false, maxZoom: 16});                                                       //Localiza nuestra posicion actual
+  map.locate({watch: false, maxZoom: 19});                                                       //Localiza nuestra posicion actual
 
   function onLocationFound(e) 
    {
@@ -185,7 +185,7 @@ setInterval(function ()
                                  L.latLng(newLat, newLng),              //Nuevo origen
                                  routingControl.options.waypoints[1]    //Mismo destino
                                ]);
-}, 3000);
+}, 2000);
 
 </script>
 </body>
