@@ -72,7 +72,8 @@
     const lon_ini = queryString.get("lon_ini");   
     
     // Map initialization 
-    var map = L.map('map', {minZoom: 13, maxZoom: 13}).setView([lat_fin, lon_fin], 13);              //Parte del mapa que se ve al activar, que es el punto final
+    alert(lat_ini + " / " + lon_ini);
+    var map = L.map('map', {minZoom: 13, maxZoom: 13}).setView([lat_ini, lon_ini], 13);              //Parte del mapa que se ve al activar, que es el punto final
     var mi_posicino_lat = "";
     var mi_posicino_lng = "";
 //    var Div_resumen = document.getElementById('resumen'); 
