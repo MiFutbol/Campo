@@ -34,9 +34,9 @@
 </head>
 
 <body>   
-    <input hidden=true, type="button" id="btn_update" value="Actualizar viaje" onclick="actualizar_ruta()">
-    <div style="text-align: left;", id="resumen"><small>Obteniendo posicion y ruta ...</small></div>
-    <div style="text-align: left;", id="llegada"><small>Calculando hora llegada ...</small></div>
+    <input hidden=false, type="button" id="btn_update" value="Actualizar viaje" onclick="actualizar_ruta()">
+<!--     <div style="text-align: left;", id="resumen"><small>Obteniendo posicion y ruta ...</small></div>  -->
+    <div style="text-align: left;", id="llegada"><small>Calculando ruta y hora llegada ...</small></div>
     <div  id="map"></div>
     <script src="https://unpkg.com/leaflet@1.8.0/dist/leaflet.js"></script>
     <script src="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.js"></script>
@@ -72,12 +72,12 @@
     const lon_ini = queryString.get("lon_ini");   
     
     // Map initialization 
-    var map = L.map('map', {minZoom: 16, maxZoom: 16}).setView([lat_ini, lon_ini], 16);              //Parte del mapa que se ve al activar, que es el punto de origen
+    var map = L.map('map', {minZoom: 13, maxZoom: 13}).setView([lat_ini, lon_ini], 13);              //Parte del mapa que se ve al activar, que es el punto de origen
     var mi_posicino_lat = lat_ini;
     var mi_posicino_lng = lon_ini;
-    var Div_resumen = document.getElementById('resumen'); 
+//    var Div_resumen = document.getElementById('resumen'); 
     var Div_llegada = document.getElementById('llegada');  
-    var Div_btn = document.getElementById("btn_update");
+//    var Div_btn = document.getElementById("btn_update");
     var timer;
     var timer_act;   
     var distancia;
@@ -115,7 +115,7 @@ var routingControl = L.Routing.control({
     language: 'es',
     routeWhileDragging: true,
     draggableWaypoints: false,
-    fitSelectedRoutes: false,   //Se autoajusta el mapa a la vista
+    fitSelectedRoutes: true,   //Se autoajusta el mapa a la vista
     addWaypoints: false,
     show : false
 }).addTo(map);
@@ -123,7 +123,7 @@ var routingControl = L.Routing.control({
 //Localizacion de donde estoy
 function localizar() 
 {
-  map.locate({watch: false, maxZoom: 16});                                                       //Localiza nuestra posicion actual
+  map.locate({watch: false, maxZoom: 13});                                                       //Localiza nuestra posicion actual
 
   function onLocationFound(e) 
    {
@@ -142,20 +142,20 @@ function localizar()
                    var routes = e.routes;
                    var summary = routes[0].summary;
                    distancia = summary.totalDistance / 1000;
-                   var duracion = Number(summary.totalTime);
-                   const h = Math.floor(duracion / 3600);
-                   const m = Math.floor(duracion % 3600 / 60);
+                   var duracion_1 = Number(summary.totalTime);
+                   const h = Math.floor(duracion_1 / 3600);
+                   const m = Math.floor(duracion_1 % 3600 / 60);
 
-                   duracion = (h > 0 ? h + " h " + (m < 10 ? "0" : "") : "") + m; 
+                   duracion_1 = (h > 0 ? h + " h " + (m < 10 ? "0" : "") : "") + m; 
               //     Div_resumen.innerHTML  = "<small>Ruta: <strong>" + duracion + "</strong> min / <strong>" + redondearDecimales(distancia, 2) + "</strong> Km</small>"; 
                    
                    var fecha = new Date();
                    var aux = fecha.setHours(fecha.getHours() + h);
                        aux = fecha.setMinutes(fecha.getMinutes() + m);
-                   duracion = (fecha.getHours() > 0 ? fecha.getHours() + ":" + (fecha.getMinutes() < 10 ? "0" : "") : "00:") + fecha.getMinutes(); 
-                   Div_llegada.innerHTML = "<small>Llegada aprox: <strong>" + duracion + "  </strong>Ruta:   <strong>" + duracion + "</strong> min / <strong>" + redondearDecimales(distancia, 2) + "</strong> Km</small>";
+                   var duracion = (fecha.getHours() > 0 ? fecha.getHours() + ":" + (fecha.getMinutes() < 10 ? "0" : "") : "00:") + fecha.getMinutes(); 
+                   Div_llegada.innerHTML = "<small>Llegada aprox: <strong>" + duracion + "  </strong>Ruta:   <strong>" + duracion_1 + "</strong> min / <strong>" + redondearDecimales(distancia, 2) + "</strong> Km</small>";
 
-                   Div_btn.hidden = false;     
+               //    Div_btn.hidden = false;     
                    if (distancia < 0.1) 
                      {
                         clearTimeout (timer);
@@ -163,8 +163,7 @@ function localizar()
 
                         map.removeControl(routeControl);
                         alert ("Has llegado al campo de futbol");
-                        Div_resumen.innerHTML  = "Gps MiFutbol";
-                        Div_llegada.innerHTML = "Has llegado al campo de futbol";
+                        Div_llegada.innerHTML  = "Gps MiFutbol - Has llegado al campo de futbol -";
                     }
                 });  
 }
