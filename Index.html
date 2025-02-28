@@ -73,8 +73,7 @@
     
     // Map initialization 
     var map = L.map('map', {minZoom: 13, maxZoom: 13}).setView([lat_fin, lon_fin], 13);              //Parte del mapa que se ve al activar, que es el punto final
-    var mi_posicino_lat = lat_ini;
-    var mi_posicino_lng = lon_ini;
+    var mi_posicino_lat = "";
 //    var Div_resumen = document.getElementById('resumen'); 
     var Div_llegada = document.getElementById('llegada');  
 //    var Div_btn = document.getElementById("btn_update");
@@ -87,7 +86,7 @@ L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
 
 
 var Marca_campo = new L.Marker([lat_fin, lon_fin], {icon: iconoLlegada}).addTo(map);
-var Mi_marca = new L.Marker([lat_fin, lon_fin]).addTo(map);
+var Mi_marca = new L.Marker([lat_fin, lon_fin], {icon: SinIconoSalida}).addTo(map);
 
 //Redondeo decimales
 function redondearDecimales(numero, decimales) 
@@ -112,10 +111,31 @@ function localizar()
    {
 
       Mi_marca.setLatLng([e.latlng.lat, e.latlng.lng]);
+      Mi_marca.icon = null;
       map.panTo([e.latlng.lat, e.latlng.lng])     
       
-      mi_posicino_lat = e.latlng.lat;
-      mi_posicino_lng = e.latlng.lng;  
+      if (mi_posicino_lat == "")
+        {
+           mi_posicino_lat = e.latlng.lat;
+
+           //Ruta principal. La que se muestra por primera vez sin haber iniciado la misma
+           routingControl = L.Routing.control({
+                waypoints: [
+                              L.latLng(e.latlng.lat, e.latlng.lng),   //Oringen 
+                              L.latLng(lat_fin, lon_fin)    //Destino
+                           ],
+                createMarker: function() { return null; },
+                lineOptions: {styles: [{color: 'blue', opacity: 0.0, weight: 2}]},
+                language: 'es',
+                routeWhileDragging: true,
+                draggableWaypoints: false,
+                fitSelectedRoutes: true,   //Se autoajusta el mapa a la vista
+                addWaypoints: false,
+                show : false
+            }).addTo(map);
+            L.Routing.errorControl(routingControl).addTo(map);
+
+        }
 
       var newWaypoint = routingControl.getWaypoints()[0].latLng;          //Captura
       var newLat = e.latlng.lat;
@@ -162,22 +182,7 @@ function localizar()
                 });  
 }
 
-//Ruta principal. La que se muestra por primera vez sin haber iniciado la misma
-routingControl = L.Routing.control({
-    waypoints: [
-        L.latLng(lat_ini, lon_ini),   //Oringen 
-        L.latLng(lat_fin, lon_fin)    //Destino
-    ],
-    createMarker: function() { return null; },
-    lineOptions: {styles: [{color: 'blue', opacity: 0.0, weight: 2}]},
-    language: 'es',
-    routeWhileDragging: true,
-    draggableWaypoints: false,
-    fitSelectedRoutes: true,   //Se autoajusta el mapa a la vista
-    addWaypoints: false,
-    show : false
-}).addTo(map);
-L.Routing.errorControl(routingControl).addTo(map);
+
 
 //setInterval(localizar, 1000);
 
