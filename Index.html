@@ -90,22 +90,21 @@ L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
 var Mi_marca = new L.Marker([lat_ini, lon_ini], {icon: Coche}).addTo(map);
 var Marca_campo = new L.Marker([lat_fin, lon_fin], {icon: iconoLlegada}).addTo(map);
 
-function locate() 
+//Redondeo decimales
+function redondearDecimales(numero, decimales) 
 {
-  map.locate({watch: true, maxZoom: 16});                                                       //Localiza nuestra posicion actual
-
-  function onLocationFound(e) 
-   {
-      Mi_marca.setLatLng([e.latlng.lat, e.latlng.lng]);
-      map.panTo([e.latlng.lat, e.latlng.lng])     
-      
-      mi_posicino_lat = e.latlng.lat;
-      mi_posicino_lng = e.latlng.lng;                    
-   }
-  map.on('locationfound', onLocationFound);
+    numeroRegexp = new RegExp('\\d\\.(\\d){' + decimales + ',}');                                // Expresion regular para numeros con un cierto numero de decimales o mas
+    if (numeroRegexp.test(numero)) 
+       {                                                                                         // Ya que el numero tiene el numero de decimales requeridos o mas, se realiza el redondeo
+         return Number(numero.toFixed(decimales));
+       } 
+       else 
+       {
+         return Number(numero.toFixed(decimales)) === 0 ? 0 : numero;                             // En valores muy bajos, se comprueba si el numero es 0 (con el redondeo deseado), si no lo es se devuelve el numero otra vez.
+       }  
 }
 
-
+//Ruta principal. La que se muestra por primera vez sin haber iniciado la misma
 var routingControl = L.Routing.control({
     waypoints: [
         L.latLng(lat_ini, lon_ini),   //Oringen 
@@ -120,11 +119,64 @@ var routingControl = L.Routing.control({
     show : false
 }).addTo(map);
 
+//Localizacion de donde estoy
+function localizar() 
+{
+  map.locate({watch: true, maxZoom: 16});                                                       //Localiza nuestra posicion actual
+
+  function onLocationFound(e) 
+   {
+      Mi_marca.setLatLng([e.latlng.lat, e.latlng.lng]);
+      map.panTo([e.latlng.lat, e.latlng.lng])     
+      
+      mi_posicino_lat = e.latlng.lat;
+      mi_posicino_lng = e.latlng.lng;                    
+   }
+
+  map.on('locationfound', onLocationFound);
+
+  //Calcula el tiempo y distancia que falta  desde nuestra posicion 
+  routingControl.on('routesfound', function(e) 
+                {
+                   var routes = e.routes;
+                   var summary = routes[0].summary;
+                   distancia = summary.totalDistance / 1000;
+                   var duracion = Number(summary.totalTime);
+                   const h = Math.floor(duracion / 3600);
+                   const m = Math.floor(duracion % 3600 / 60);
+
+                   duracion = (h > 0 ? h + " h " + (m < 10 ? "0" : "") : "") + m; 
+                   Div_resumen.innerHTML  = "<small>Ruta: <strong>" + duracion + "</strong> min / <strong>" + redondearDecimales(distancia, 2) + "</strong> Km</small>"; 
+                   
+                   var fecha = new Date();
+                   var aux = fecha.setHours(fecha.getHours() + h);
+                       aux = fecha.setMinutes(fecha.getMinutes() + m);
+                   duracion = (fecha.getHours() > 0 ? fecha.getHours() + ":" + (fecha.getMinutes() < 10 ? "0" : "") : "00:") + fecha.getMinutes(); 
+                   Div_llegada.innerHTML = "<small>Llegada aprox: <strong>" + duracion + "  </strong></small>";
+
+                   Div_btn.hidden = false;     
+                   if (distancia < 0.1) 
+                     {
+                        clearTimeout (timer);
+                        clearTimeout (timer_act);
+
+                        map.removeControl(routeControl);
+                        alert ("Has llegado al campo de futbol");
+                        Div_resumen.innerHTML  = "Gps MiFutbol";
+                        Div_llegada.innerHTML = "Has llegado al campo de futbol";
+                    }
+                });  
+}
+
 L.Routing.errorControl(routingControl).addTo(map);
 
-setInterval(locate, 1000);
+//setInterval(localizar, 1000);
 
-setInterval(function () {
+//Refresco de la ruta, con nuestra posicion actual
+setInterval(function () 
+{
+    localizar();
+
     var newWaypoint = routingControl.getWaypoints()[0].latLng;          //Captura
     var newLat = mi_posicino_lat;
     var newLng = mi_posicino_lng;
@@ -132,9 +184,7 @@ setInterval(function () {
                                  L.latLng(newLat, newLng),              //Nuevo origen
                                  routingControl.options.waypoints[1]    //Mismo destino
                                ]);
-    //Pone el valor del tiempo y distancia que se tardaria en la etiquita tiempo <div>
-    
-}, 1000);
+}, 3000);
 
 </script>
 </body>
