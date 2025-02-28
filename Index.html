@@ -78,7 +78,6 @@
     var Div_resumen = document.getElementById('resumen'); 
     var Div_llegada = document.getElementById('llegada');  
     var Div_btn = document.getElementById("btn_update");
-    var routeControl = "";   
     var timer;
     var timer_act;   
     var distancia;
@@ -88,7 +87,7 @@ L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
 }).addTo(map);
 
 
-var Mi_marca = new L.Marker(map.getCenter(), {icon: Coche}).addTo(map);
+var Mi_marca = new L.Marker([lat_ini, lon_ini], {icon: Coche}).addTo(map);
 var Marca_campo = new L.Marker([lat_fin, lon_fin], {icon: iconoLlegada}).addTo(map);
 
 function locate() 
@@ -113,11 +112,12 @@ var routingControl = L.Routing.control({
         L.latLng(lat_fin, lon_fin)    //Destino
     ],
     createMarker: function() { return null; },
-    routeWhileDragging: false,
+    routeWhileDragging: true,
     draggableWaypoints: false,
     reverseWaypoints: false,
     fitSelectedRoutes: true,
-    addWaypoints: true
+    addWaypoints: true,
+    show : false
 }).addTo(map);
 
 L.Routing.errorControl(routingControl).addTo(map);
@@ -132,6 +132,8 @@ setInterval(function () {
                                  L.latLng(newLat, newLng),              //Nuevo origen
                                  routingControl.options.waypoints[1]    //Mismo destino
                                ]);
+    //Pone el valor del tiempo y distancia que se tardaria en la etiquita tiempo <div>
+    
 }, 1000);
 
 </script>
