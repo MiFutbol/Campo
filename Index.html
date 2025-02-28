@@ -145,7 +145,7 @@ function localizar()
                    var aux = fecha.setHours(fecha.getHours() + h);
                        aux = fecha.setMinutes(fecha.getMinutes() + m);
                    var duracion = (fecha.getHours() > 0 ? fecha.getHours() + ":" + (fecha.getMinutes() < 10 ? "0" : "") : "00:") + fecha.getMinutes(); 
-                   Div_llegada.innerHTML = "<small>Llegada aprox: <strong>" + duracion + " </strong>// [Ruta:<strong>" + duracion_1 + "</strong> min / <strong>" + redondearDecimales(distancia, 2) + "</strong> Km</small>]";
+                   Div_llegada.innerHTML = "<small>Llegada aprox: <strong>" + duracion + " </strong>// [Tiempo:<strong>" + duracion_1 + "</strong> min / <strong>" + redondearDecimales(distancia, 2) + "</strong> Km</small>]";
 
 
                //    Div_btn.hidden = false;     
