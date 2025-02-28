@@ -72,14 +72,13 @@
     const lon_ini = queryString.get("lon_ini");   
     
     // Map initialization 
-    var map = L.map('map', {minZoom: 13, maxZoom: 13}).setView([lat_ini, lon_ini], 13);              //Parte del mapa que se ve al activar, que es el punto de origen
+    var map = L.map('map', {minZoom: 13, maxZoom: 13}).setView([lat_fin, lon_fin], 13);              //Parte del mapa que se ve al activar, que es el punto final
     var mi_posicino_lat = lat_ini;
     var mi_posicino_lng = lon_ini;
 //    var Div_resumen = document.getElementById('resumen'); 
     var Div_llegada = document.getElementById('llegada');  
 //    var Div_btn = document.getElementById("btn_update");
-    var timer;
-    var timer_act;   
+    var routingControl ;
     var distancia;
 
 L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
@@ -87,8 +86,8 @@ L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
 }).addTo(map);
 
 
-var Mi_marca = new L.Marker([lat_ini, lon_ini]).addTo(map);
 var Marca_campo = new L.Marker([lat_fin, lon_fin], {icon: iconoLlegada}).addTo(map);
+var Mi_marca = new L.Marker([lat_fin, lon_fin]).addTo(map);
 
 //Redondeo decimales
 function redondearDecimales(numero, decimales) 
@@ -104,22 +103,6 @@ function redondearDecimales(numero, decimales)
        }  
 }
 
-//Ruta principal. La que se muestra por primera vez sin haber iniciado la misma
-var routingControl = L.Routing.control({
-    waypoints: [
-        L.latLng(lat_ini, lon_ini),   //Oringen 
-        L.latLng(lat_fin, lon_fin)    //Destino
-    ],
-    createMarker: function() { return null; },
-    lineOptions: {styles: [{color: 'blue', opacity: 0.6, weight: 2}]},
-    language: 'es',
-    routeWhileDragging: true,
-    draggableWaypoints: false,
-    fitSelectedRoutes: true,   //Se autoajusta el mapa a la vista
-    addWaypoints: false,
-    show : false
-}).addTo(map);
-
 //Localizacion de donde estoy
 function localizar() 
 {
@@ -127,11 +110,20 @@ function localizar()
 
   function onLocationFound(e) 
    {
+
       Mi_marca.setLatLng([e.latlng.lat, e.latlng.lng]);
-//Div_llegada      map.panTo([e.latlng.lat, e.latlng.lng])     
+      map.panTo([e.latlng.lat, e.latlng.lng])     
       
       mi_posicino_lat = e.latlng.lat;
-      mi_posicino_lng = e.latlng.lng;                    
+      mi_posicino_lng = e.latlng.lng;  
+
+      var newWaypoint = routingControl.getWaypoints()[0].latLng;          //Captura
+      var newLat = e.latlng.lat;
+      var newLng = e.latlng.lng;
+      routingControl.setWaypoints([
+                                     L.latLng(newLat, newLng),              //Nuevo origen
+                                     routingControl.options.waypoints[1]    //Mismo destino
+                                  ]);                  
    }
 
   map.on('locationfound', onLocationFound);
@@ -170,23 +162,27 @@ function localizar()
                 });  
 }
 
+//Ruta principal. La que se muestra por primera vez sin haber iniciado la misma
+routingControl = L.Routing.control({
+    waypoints: [
+        L.latLng(lat_ini, lon_ini),   //Oringen 
+        L.latLng(lat_fin, lon_fin)    //Destino
+    ],
+    createMarker: function() { return null; },
+    lineOptions: {styles: [{color: 'blue', opacity: 0.0, weight: 2}]},
+    language: 'es',
+    routeWhileDragging: true,
+    draggableWaypoints: false,
+    fitSelectedRoutes: true,   //Se autoajusta el mapa a la vista
+    addWaypoints: false,
+    show : false
+}).addTo(map);
 L.Routing.errorControl(routingControl).addTo(map);
 
 //setInterval(localizar, 1000);
 
 //Refresco de la ruta, con nuestra posicion actual
-setInterval(function () 
-{
-    localizar();
-
-    var newWaypoint = routingControl.getWaypoints()[0].latLng;          //Captura
-    var newLat = mi_posicino_lat;
-    var newLng = mi_posicino_lng;
-    routingControl.setWaypoints([
-                                 L.latLng(newLat, newLng),              //Nuevo origen
-                                 routingControl.options.waypoints[1]    //Mismo destino
-                               ]);
-}, 3000);
+setInterval( localizar, 5000);
 
 </script>
 </body>
