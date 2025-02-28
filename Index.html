@@ -147,13 +147,13 @@ function localizar()
                    const m = Math.floor(duracion % 3600 / 60);
 
                    duracion = (h > 0 ? h + " h " + (m < 10 ? "0" : "") : "") + m; 
-                   Div_resumen.innerHTML  = "<small>Ruta: <strong>" + duracion + "</strong> min / <strong>" + redondearDecimales(distancia, 2) + "</strong> Km</small>"; 
+              //     Div_resumen.innerHTML  = "<small>Ruta: <strong>" + duracion + "</strong> min / <strong>" + redondearDecimales(distancia, 2) + "</strong> Km</small>"; 
                    
                    var fecha = new Date();
                    var aux = fecha.setHours(fecha.getHours() + h);
                        aux = fecha.setMinutes(fecha.getMinutes() + m);
                    duracion = (fecha.getHours() > 0 ? fecha.getHours() + ":" + (fecha.getMinutes() < 10 ? "0" : "") : "00:") + fecha.getMinutes(); 
-                   Div_llegada.innerHTML = "<small>Llegada aprox: <strong>" + duracion + "  </strong></small>";
+                   Div_llegada.innerHTML = "<small>Llegada aprox: <strong>" + duracion + "  </strong>Ruta:   <strong>" + duracion + "</strong> min / <strong>" + redondearDecimales(distancia, 2) + "</strong> Km</small>";
 
                    Div_btn.hidden = false;     
                    if (distancia < 0.1) 
