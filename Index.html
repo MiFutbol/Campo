@@ -128,7 +128,7 @@ function localizar()
                 language: 'es',
                 routeWhileDragging: true,
                 draggableWaypoints: false,
-                fitSelectedRoutes: true,   //Se autoajusta el mapa a la vista
+                fitSelectedRoutes: false,   //Se autoajusta el mapa a la vista
                 addWaypoints: false,
                 show : false
             }).addTo(map);
@@ -142,11 +142,7 @@ function localizar()
       routingControl.setWaypoints([
                                      L.latLng(newLat, newLng),              //Nuevo origen
                                      routingControl.options.waypoints[1]    //Mismo destino
-                                  ]);                  
-   }
-
-  map.on('locationfound', onLocationFound);
-
+                                  ]);          
   //Calcula el tiempo y distancia que falta  desde nuestra posicion 
   routingControl.on('routesfound', function(e) 
                 {
@@ -178,7 +174,11 @@ function localizar()
                         alert ("Has llegado al campo de futbol");
                         Div_llegada.innerHTML  = "Gps MiFutbol - Has llegado al campo de futbol -";
                     }
-                });  
+                });          
+   }
+
+  map.on('locationfound', onLocationFound);
+
 }
 
 
