@@ -115,7 +115,7 @@ var routingControl = L.Routing.control({
     language: 'es',
     routeWhileDragging: true,
     draggableWaypoints: false,
-    fitSelectedRoutes: true,   //Se autoajusta el mapa a la vista
+    fitSelectedRoutes: false,   //Se autoajusta el mapa a la vista
     addWaypoints: false,
     show : false
 }).addTo(map);
@@ -128,7 +128,7 @@ function localizar()
   function onLocationFound(e) 
    {
       Mi_marca.setLatLng([e.latlng.lat, e.latlng.lng]);
-//      map.panTo([e.latlng.lat, e.latlng.lng])     
+      map.panTo([e.latlng.lat, e.latlng.lng])     
       
       mi_posicino_lat = e.latlng.lat;
       mi_posicino_lng = e.latlng.lng;                    
