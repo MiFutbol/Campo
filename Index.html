@@ -34,9 +34,9 @@
 </head>
 
 <body>   
-    <input hidden=false, type="button" id="btn_update" value="Actualizar viaje" onclick="actualizar_ruta()">
+<!--    <input hidden=false, type="button" id="btn_update" value="Actualizar viaje" onclick="actualizar_ruta()"> -->
 <!--     <div style="text-align: left;", id="resumen"><small>Obteniendo posicion y ruta ...</small></div>  -->
-    <div style="text-align: left;", id="llegada"><small>Calculando ruta y hora llegada ...</small></div>
+    <label  style="text-align: left;", id="llegada"><small>Obteniendo ruta y hora llegada ...</small></label >
     <div  id="map"></div>
     <script src="https://unpkg.com/leaflet@1.8.0/dist/leaflet.js"></script>
     <script src="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.js"></script>
@@ -128,7 +128,7 @@ function localizar()
   function onLocationFound(e) 
    {
       Mi_marca.setLatLng([e.latlng.lat, e.latlng.lng]);
-      map.panTo([e.latlng.lat, e.latlng.lng])     
+//Div_llegada      map.panTo([e.latlng.lat, e.latlng.lng])     
       
       mi_posicino_lat = e.latlng.lat;
       mi_posicino_lng = e.latlng.lng;                    
@@ -139,6 +139,7 @@ function localizar()
   //Calcula el tiempo y distancia que falta  desde nuestra posicion 
   routingControl.on('routesfound', function(e) 
                 {
+                    const redColor = "#FF0000";
                    var routes = e.routes;
                    var summary = routes[0].summary;
                    distancia = summary.totalDistance / 1000;
@@ -153,7 +154,8 @@ function localizar()
                    var aux = fecha.setHours(fecha.getHours() + h);
                        aux = fecha.setMinutes(fecha.getMinutes() + m);
                    var duracion = (fecha.getHours() > 0 ? fecha.getHours() + ":" + (fecha.getMinutes() < 10 ? "0" : "") : "00:") + fecha.getMinutes(); 
-                   Div_llegada.innerHTML = "<small>Llegada aprox: <strong>" + duracion + "  </strong>Ruta:   <strong>" + duracion_1 + "</strong> min / <strong>" + redondearDecimales(distancia, 2) + "</strong> Km</small>";
+                   Div_llegada.innerHTML = "<small>Llegada aprox: <strong>" + duracion + " </strong>// [Ruta:<strong>" + duracion_1 + "</strong> min / <strong>" + redondearDecimales(distancia, 2) + "</strong> Km</small>]";
+
 
                //    Div_btn.hidden = false;     
                    if (distancia < 0.1) 
