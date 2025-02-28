@@ -36,7 +36,7 @@
 <body>   
 <!--    <input hidden=false, type="button" id="btn_update" value="Actualizar viaje" onclick="actualizar_ruta()"> -->
 <!--     <div style="text-align: left;", id="resumen"><small>Obteniendo posicion y ruta ...</small></div>  -->
-    <label  style="text-align: left;", id="llegada"><small>GPS MiFutbol</small></label >
+    <label  style="text-align: left;", id="llegada"><small>Obteniendo ruta y hora llegada ...</small></label >
     <div  id="map"></div>
     <script src="https://unpkg.com/leaflet@1.8.0/dist/leaflet.js"></script>
     <script src="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.js"></script>
@@ -74,10 +74,12 @@
     // Map initialization 
     var map = L.map('map', {minZoom: 13, maxZoom: 13}).setView([lat_fin, lon_fin], 13);              //Parte del mapa que se ve al activar, que es el punto final
     var mi_posicino_lat = "";
+    var mi_posicino_lng = "";
 //    var Div_resumen = document.getElementById('resumen'); 
     var Div_llegada = document.getElementById('llegada');  
 //    var Div_btn = document.getElementById("btn_update");
-    var routingControl ;
+    var timer;
+    var timer_act;   
     var distancia;
 
 L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
@@ -86,7 +88,6 @@ L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
 
 
 var Marca_campo = new L.Marker([lat_fin, lon_fin], {icon: iconoLlegada}).addTo(map);
-var Mi_marca = new L.Marker([lat_fin, lon_fin]).addTo(map);
 
 //Redondeo decimales
 function redondearDecimales(numero, decimales) 
@@ -105,47 +106,26 @@ function redondearDecimales(numero, decimales)
 //Localizacion de donde estoy
 function localizar() 
 {
-  map.locate({watch: false, maxZoom: 13});                                                       //Localiza nuestra posicion actual
+  clearTimeout (timer);
+
+  map.locate({watch: false, maxZoom: 13});  
 
   function onLocationFound(e) 
    {
+  
+      if (mi_posicino_lat == "")    
+      {
+         var Mi_marca = new L.Marker([e.latlng.lat, e.latlng.lng]).addTo(map);
+      }
 
       Mi_marca.setLatLng([e.latlng.lat, e.latlng.lng]);
       map.panTo([e.latlng.lat, e.latlng.lng])     
       
-      if (mi_posicino_lat == "")
-        {
-           Div_llegada.innerHTML  = "Obteniendo posicion, ruta y duracion ...";
-           mi_posicino_lat = e.latlng.lat;
+      mi_posicino_lat = e.latlng.lat;
+      mi_posicino_lng = e.latlng.lng;                    
+   }
 
-           //Ruta principal. La que se muestra por primera vez sin haber iniciado la misma
-           routingControl = L.Routing.control({
-                waypoints: [
-                              L.latLng(e.latlng.lat, e.latlng.lng),   //Oringen 
-                              L.latLng(lat_fin, lon_fin)    //Destino
-                           ],
-                createMarker: function() { return null; },
-                lineOptions: {styles: [{color: 'blue', opacity: 0.0, weight: 2}]},
-                language: 'es',
-                routeWhileDragging: true,
-                draggableWaypoints: false,
-                fitSelectedRoutes: false,   //Se autoajusta el mapa a la vista
-                addWaypoints: false,
-                show : false
-            }).addTo(map);
-            L.Routing.errorControl(routingControl).addTo(map);
-
-        }
-        else
-        {
-           var newWaypoint = routingControl.getWaypoints()[0].latLng;          //Captura
-           var newLat = e.latlng.lat;
-           var newLng = e.latlng.lng;
-           routingControl.setWaypoints([
-                                         L.latLng(newLat, newLng),              //Nuevo origen
-                                         routingControl.options.waypoints[1]    //Mismo destino
-                                      ]);          
-        }
+  map.on('locationfound', onLocationFound);
 
   //Calcula el tiempo y distancia que falta  desde nuestra posicion 
   routingControl.on('routesfound', function(e) 
@@ -178,19 +158,58 @@ function localizar()
                         alert ("Has llegado al campo de futbol");
                         Div_llegada.innerHTML  = "Gps MiFutbol - Has llegado al campo de futbol -";
                     }
-                });          
-   }
+                });  
+  timer = setInterval(function () 
+{                                                     //Localiza nuestra posicion actual
+    localizar();
 
-  map.on('locationfound', onLocationFound);
-
+    if (mi_posicino_lat != "")
+    {
+    var newLat = mi_posicino_lat;
+    var newLng = mi_posicino_lng;
+    routingControl.setWaypoints([
+                                 L.latLng(newLat, newLng),              //Nuevo origen
+                                 routingControl.options.waypoints[1]    //Mismo destino
+                               ]);
+    }
+}, 5000);
 }
 
 
+//Ruta principal. La que se muestra por primera vez sin haber iniciado la misma
+var routingControl = L.Routing.control({
+    waypoints: [
+        L.latLng(lat_ini, lon_ini),   //Oringen 
+        L.latLng(lat_fin, lon_fin)    //Destino
+    ],
+    createMarker: function() { return null; },
+    lineOptions: {styles: [{color: 'blue', opacity: 0.0, weight: 2}]},
+    language: 'es',
+    routeWhileDragging: true,
+    draggableWaypoints: false,
+    fitSelectedRoutes: false,   //Se autoajusta el mapa a la vista
+    addWaypoints: false,
+    show : false
+}).addTo(map);
+L.Routing.errorControl(routingControl).addTo(map);
 
 //setInterval(localizar, 1000);
 
 //Refresco de la ruta, con nuestra posicion actual
-setInterval( localizar, 2000);
+var timer = setInterval(function () 
+{                                                     //Localiza nuestra posicion actual
+    localizar();
+
+    if (mi_posicino_lat != "")
+    {
+    var newLat = mi_posicino_lat;
+    var newLng = mi_posicino_lng;
+    routingControl.setWaypoints([
+                                 L.latLng(newLat, newLng),              //Nuevo origen
+                                 routingControl.options.waypoints[1]    //Mismo destino
+                               ]);
+    }
+}, 5000);
 
 </script>
 </body>
