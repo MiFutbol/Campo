@@ -105,8 +105,6 @@ function redondearDecimales(numero, decimales)
 //Localizacion de donde estoy
 function localizar() 
 {
-  clearTimeout (timer);
-
   map.locate({watch: false, maxZoom: 12});  
 
   function onLocationFound(e) 
@@ -157,21 +155,7 @@ function localizar()
                         alert ("Has llegado al campo de futbol");
                         Div_llegada.innerHTML  = "Gps MiFutbol - Has llegado al campo de futbol -";
                     }
-                });  
-  timer = setInterval(function () 
-{                                                     //Localiza nuestra posicion actual
-    localizar();
-
-    if (mi_posicino_lat != "")
-    {
-    var newLat = mi_posicino_lat;
-    var newLng = mi_posicino_lng;
-    routingControl.setWaypoints([
-                                 L.latLng(newLat, newLng),              //Nuevo origen
-                                 routingControl.options.waypoints[1]    //Mismo destino
-                               ]);
-    }
-}, 5000);
+                });
 }
 
 
