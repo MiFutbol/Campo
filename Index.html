@@ -63,6 +63,12 @@ var SinIconoSalida = new L.Icon
   iconSize: [0, 0],
 });
 
+var IcnoLlegada_2 = new L.Icon
+({
+  iconUrl: 'Img/Llegada.png',  
+  iconSize: [25, 41],
+});
+
 const queryString = new URLSearchParams(window.location.search);  
 const lat_fin = queryString.get("lat_fin");    
 const lon_fin = queryString.get("lon_fin");    
@@ -82,7 +88,8 @@ var osm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {att
 osm.addTo(map);
 
 var Mi_marca = new L.Marker([lat_ini, lon_ini]).addTo(map);                            //Parte del mapa que se ve al activar, que es el punto final
-var Marca_campo = new L.Marker([lat_fin, lon_fin], {icon: iconoLlegada}).addTo(map);
+var Marca_campo = new L.Marker([lat_fin, lon_fin]).addTo(map);
+
 
 //Redondeo decimales
 function redondearDecimales(numero, decimales) 
@@ -106,7 +113,7 @@ function localizar()
   function onLocationFound(e) 
    {
       Mi_marca.setLatLng([e.latlng.lat, e.latlng.lng]);
-      map.panTo([e.latlng.lat, e.latlng.lng]);     
+//      map.panTo([e.latlng.lat, e.latlng.lng]);     
       
       mi_posicino_lat = e.latlng.lat;
       mi_posicino_lng = e.latlng.lng;                    
@@ -161,8 +168,6 @@ var routingControl = L.Routing.control({
     show : false
 }).addTo(map);
 L.Routing.errorControl(routingControl).addTo(map);
-
-//setInterval(localizar, 1000);
 
 //Refresco de la ruta, con nuestra posicion actual
 var timer = setInterval(function () 
