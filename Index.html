@@ -72,7 +72,8 @@
     const lon_ini = queryString.get("lon_ini");   
     
     // Map initialization 
-    var map = L.map('map', {minZoom: 9, maxZoom: 12}).setView([lat_ini, lon_ini], 12);              //Parte del mapa que se ve al activar, que es el punto final
+    var map = L.map('map', {minZoom: 9, maxZoom: 12}).setView([lat_ini, lon_ini], 12);    
+    var Mi_marca = new L.Marker([lat_ini, lon_ini]).addTo(map);//Parte del mapa que se ve al activar, que es el punto final
     var mi_posicino_lat = "";
     var mi_posicino_lng = "";
 //    var Div_resumen = document.getElementById('resumen'); 
@@ -109,7 +110,7 @@ function localizar()
 
   function onLocationFound(e) 
    {
-  var Mi_marca = new L.Marker([e.latlng.lat, e.latlng.lng]).addTo(map);
+  
 
       Mi_marca.setLatLng([e.latlng.lat, e.latlng.lng]);
       map.panTo([e.latlng.lat, e.latlng.lng]);     
