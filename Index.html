@@ -109,11 +109,7 @@ function localizar()
 
   function onLocationFound(e) 
    {
-  
-      if (mi_posicino_lat == "")    
-      {
-         var Mi_marca = new L.Marker([e.latlng.lat, e.latlng.lng]).addTo(map);
-      }
+  var Mi_marca = new L.Marker([e.latlng.lat, e.latlng.lng]).addTo(map);
 
       Mi_marca.setLatLng([e.latlng.lat, e.latlng.lng]);
       map.panTo([e.latlng.lat, e.latlng.lng]);     
