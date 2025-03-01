@@ -18,8 +18,6 @@
      <script src="https://cdn.jsdelivr.net/npm/leaflet.locatecontrol@v0.74.0/dist/L.Control.Locate.min.js" charset="utf-8"></script>    
      <script src="https://npmcdn.com/leaflet@0.7.7/dist/leaflet.js"></script>  
     <script src="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.js"></script>  
-    <!--<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" /> -->
-    <!--<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>    -->
     <script>L_NO_TOUCH = true;</script>
 
     <style>
@@ -36,8 +34,6 @@
 </head>
 
 <body>   
-<!--    <input hidden=false, type="button" id="btn_update" value="Actualizar viaje" onclick="actualizar_ruta()"> -->
-<!--     <div style="text-align: left;", id="resumen"><small>Obteniendo posicion y ruta ...</small></div>  -->
     <label  style="text-align: left;", id="llegada"><small>Obteniendo ruta y hora llegada ...</small></label >
     <div  id="map"></div>
     <script src="https://unpkg.com/leaflet@1.8.0/dist/leaflet.js"></script>
@@ -114,12 +110,6 @@ function localizar()
       
       mi_posicino_lat = e.latlng.lat;
       mi_posicino_lng = e.latlng.lng;                    
-   }
-
-  function onLocationError(e) 
-   {
-      Mi_marca.setLatLng([e.latlng.lat, e.latlng.lng]);
-      map.panTo([e.latlng.lat, e.latlng.lng]);                    
    }
 
   map.on('locationfound', onLocationFound);
