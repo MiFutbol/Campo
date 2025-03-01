@@ -41,52 +41,49 @@
     <script src="https://unpkg.com/leaflet@1.8.0/dist/leaflet.js"></script>
     <script src="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.js"></script>
 <script>
-    var Coche = L.icon
-    ({
-      iconUrl: 'Img/coche.png',
-      iconSize: [30, 30]
-    }) 
+var Coche = L.icon
+({
+  iconUrl: 'Img/coche.png',
+  iconSize: [30, 30]
+}) 
 
-    var iconoLlegada = L.icon
-    ({
-      iconUrl: 'Img/iconoLlegada.png',
-      iconSize: [30, 30]
-    }) 
+var iconoLlegada = L.icon
+({
+  iconUrl: 'Img/iconoLlegada.png',
+  iconSize: [30, 30]
+}) 
 
-    var iconoFinalViaje = L.icon
-    ({
-      iconUrl: 'Img/final_viaje.png',
-      iconSize: [30, 30]
-    }) 
+var iconoFinalViaje = L.icon
+({
+  iconUrl: 'Img/final_viaje.png',
+  iconSize: [30, 30]
+}) 
 
-    var SinIconoSalida = new L.Icon
-    ({
-      iconUrl: 'Img/gps3.png',  
-      iconSize: [0, 0],
-    });
+var SinIconoSalida = new L.Icon
+({
+  iconUrl: 'Img/gps3.png',  
+  iconSize: [0, 0],
+});
 
-    const queryString = new URLSearchParams(window.location.search);  
-    const lat_fin = queryString.get("lat_fin");    
-    const lon_fin = queryString.get("lon_fin");    
-    const lat_ini = queryString.get("lat_ini");    
-    const lon_ini = queryString.get("lon_ini");   
+const queryString = new URLSearchParams(window.location.search);  
+const lat_fin = queryString.get("lat_fin");    
+const lon_fin = queryString.get("lon_fin");    
+const lat_ini = queryString.get("lat_ini");    
+const lon_ini = queryString.get("lon_ini");   
     
-    // Map initialization 
-    var map = L.map('map', {minZoom: 9, maxZoom: 12}).setView([lat_ini, lon_ini], 12);    
-    var Mi_marca = new L.Marker([lat_ini, lon_ini]).addTo(map);//Parte del mapa que se ve al activar, que es el punto final
-    var mi_posicino_lat = "";
-    var mi_posicino_lng = "";
-//    var Div_resumen = document.getElementById('resumen'); 
-    var Div_llegada = document.getElementById('llegada');  
-//    var Div_btn = document.getElementById("btn_update");
-    var timer;
-    var timer_act;   
-    var distancia;
+// Map initialization 
+var map = L.map('map', {minZoom: 9, maxZoom: 14}).setView([lat_ini, lon_ini], 14);    
+var mi_posicino_lat = "";
+var mi_posicino_lng = "";
+var Div_llegada = document.getElementById('llegada');  
+var timer; 
+var distancia;
 
-    //osm layer
-    var osm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {attribution: 'MiFutbol. Ver 3.0'});
-    osm.addTo(map);
+//osm layer
+var osm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {attribution: 'MiFutbol. Ver 3.0'});
+osm.addTo(map);
 
+var Mi_marca = new L.Marker([lat_ini, lon_ini]).addTo(map);                            //Parte del mapa que se ve al activar, que es el punto final
 var Marca_campo = new L.Marker([lat_fin, lon_fin], {icon: iconoLlegada}).addTo(map);
 
 //Redondeo decimales
@@ -106,14 +103,14 @@ function redondearDecimales(numero, decimales)
 //Localizacion de donde estoy
 function localizar() 
 {
-  map.locate({watch: false, maxZoom: 12});  
+  map.locate({watch: false, maxZoom: 14});  
 
   function onLocationFound(e) 
    {
-  
-
-      Mi_marca.setLatLng([e.latlng.lat, e.latlng.lng]);
-      map.panTo([e.latlng.lat, e.latlng.lng]);     
+      map.removeControl(Mi_marca);
+      var Mi_marca = new L.Marker([e.latlng.lat, e.latlng.lng]).addTo(map); 
+//**      Mi_marca.setLatLng([e.latlng.lat, e.latlng.lng]);
+//**      map.panTo([e.latlng.lat, e.latlng.lng]);     
       
       mi_posicino_lat = e.latlng.lat;
       mi_posicino_lng = e.latlng.lng;                    
@@ -124,7 +121,6 @@ function localizar()
   //Calcula el tiempo y distancia que falta  desde nuestra posicion 
   routingControl.on('routesfound', function(e) 
                 {
-                    const redColor = "#FF0000";
                    var routes = e.routes;
                    var summary = routes[0].summary;
                    distancia = summary.totalDistance / 1000;
@@ -133,7 +129,6 @@ function localizar()
                    const m = Math.floor(duracion_1 % 3600 / 60);
 
                    duracion_1 = (h > 0 ? h + " h " + (m < 10 ? "0" : "") : "") + m; 
-              //     Div_resumen.innerHTML  = "<small>Ruta: <strong>" + duracion + "</strong> min / <strong>" + redondearDecimales(distancia, 2) + "</strong> Km</small>"; 
                    
                    var fecha = new Date();
                    var aux = fecha.setHours(fecha.getHours() + h);
@@ -141,9 +136,7 @@ function localizar()
                    var duracion = (fecha.getHours() > 0 ? fecha.getHours() + ":" + (fecha.getMinutes() < 10 ? "0" : "") : "00:") + fecha.getMinutes(); 
                    Div_llegada.innerHTML = "<small>Llegada aprox: <strong>" + duracion + " </strong>// [Tiempo:<strong>" + duracion_1 + "</strong> min / <strong>" + redondearDecimales(distancia, 2) + "</strong> Km</small>]";
 
-
-               //    Div_btn.hidden = false;     
-                   if (distancia < 0.1) 
+                   if (distancia < 0.3) 
                      {
                         clearTimeout (timer);
                         clearTimeout (timer_act);
@@ -189,7 +182,7 @@ var timer = setInterval(function ()
                                  routingControl.options.waypoints[1]    //Mismo destino
                                ]);
     }
-}, 5000);
+}, 4000);
 
 </script>
 </body>
