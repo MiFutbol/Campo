@@ -5,15 +5,21 @@
     <meta charset="UTF-8">
     <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0"> -->
     <meta name="viewport" id="viewport" content="width=device-width, user-scalable=no, minimum-scale=1, maximum-scale=1" />
-    <title>Leaflet Tutorial</title>
+
+    <meta http-equiv="Expires" content="0">
+    <meta http-equiv="Last-Modified" content="0">
+    <meta http-equiv="Cache-Control" content="no-cache, mustrevalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+
+    <title>Mi Futbol</title>
 
     <!-- leaflet css  -->
      <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />   
      <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.css" />  
-     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css"/>      
+     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css">      
      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet.locatecontrol@v0.74.0/dist/L.Control.Locate.min.css" />        
      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet.locatecontrol@0.74.4/dist/L.Control.Locate.min.css" />         
-     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css"/>     
+     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css">     
 
      <script src="https://cdn.jsdelivr.net/npm/leaflet.locatecontrol@v0.74.0/dist/L.Control.Locate.min.js" charset="utf-8"></script>    
      <script src="https://npmcdn.com/leaflet@0.7.7/dist/leaflet.js"></script>  
@@ -34,12 +40,11 @@
 </head>
 
 <body>   
-    <label  style="text-align: left;", id="llegada"><small>Obteniendo ruta y hora llegada ...</small></label>
+    <label  style="text-align: left;", id="llegada"><small>Obteniendo ruta y hora llegada ...</small></label >
     <div  id="map"></div>
     <script src="https://unpkg.com/leaflet@1.8.0/dist/leaflet.js"></script>
     <script src="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.js"></script>
 <script>
-    
 var Coche = L.icon
 ({
   iconUrl: 'Img/coche.png',
@@ -62,6 +67,12 @@ var SinIconoSalida = new L.Icon
 ({
   iconUrl: 'Img/gps3.png',  
   iconSize: [0, 0],
+});
+
+var IcnoLlegada_2 = new L.Icon
+({
+  iconUrl: 'Img/Llegada.png',  
+  iconSize: [25, 41],
 });
 
 const queryString = new URLSearchParams(window.location.search);  
@@ -137,6 +148,7 @@ function localizar()
                    if (distancia < 0.3) 
                      {
                         clearTimeout (timer);
+                        clearTimeout (timer_act);
 
                         map.removeControl(routeControl);
                         alert ("Has llegado al campo de futbol");
