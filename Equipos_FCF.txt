@@ -8345,5 +8345,4 @@ INICIO
 							<td style="color: #777 !important;font-family: apex !important;">9817</td>
 							<td class="d-n_tp" style="color: #000 !important;font-family: apex !important;">Caldes De Montbui</td>
 							<td class="d-n_tp" style="color: #000 !important;font-family: apex !important;">Barcelona</td>
-						</tr>
 FIN
