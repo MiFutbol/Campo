@@ -3817,13 +3817,13 @@ INICIO
 							<td class="d-n_tp" style="color: #000 !important;font-family: apex !important;">Sant Llorenç De La Muga</td>
 							<td class="d-n_tp" style="color: #000 !important;font-family: apex !important;">Girona</td>
 						</tr><tr>
-							<td class="p-0_tp"><a href="https://www.fcf.cat/club/2425//"><img class="escut-img" onerror="this.src='https://www.fcf.cat/img/escutbase.png'" src="https://files.fcf.cat/escudos/clubes/escudos/" style="max-width:30px !important;max-height:30px !important;"></a></td>
+							<td class="p-0_tp"><a href="https://www.fcf.cat/club/2425//"><img class="escut-img" onerror="this.src='https://www.fcf.cat/img/escutbase.png'" src="https://www.fcf.cat/img/escutbase.png" style="max-width:30px !important;max-height:30px !important;"></a></td>
 							<td class="tl" style="color: #000 !important;font-family: apexbold !important;"><a href="https://www.fcf.cat/club/2425//">MAÇANET 2022, CLUB ESPORTIU FUTBOL </a></td>
 							<td style="color: #777 !important;font-family: apex !important;">5405</td>
 							<td class="d-n_tp" style="color: #000 !important;font-family: apex !important;">Maçanet De La Selva</td>
 							<td class="d-n_tp" style="color: #000 !important;font-family: apex !important;">Girona</td>
 						</tr><tr>
-							<td class="p-0_tp"><a href="https://www.fcf.cat/club/2425//"><img class="escut-img" onerror="this.src='https://www.fcf.cat/img/escutbase.png'" src="https://files.fcf.cat/escudos/clubes/escudos/" style="max-width:30px !important;max-height:30px !important;"></a></td>
+							<td class="p-0_tp"><a href="https://www.fcf.cat/club/2425//"><img class="escut-img" onerror="this.src='https://www.fcf.cat/img/escutbase.png'" src="https://www.fcf.cat/img/escutbase.png" style="max-width:30px !important;max-height:30px !important;"></a></td>
 							<td class="tl" style="color: #000 !important;font-family: apexbold !important;"><a href="https://www.fcf.cat/club/2425//">SANT NARCIS, CLUB ATLÈTIC </a></td>
 							<td style="color: #777 !important;font-family: apex !important;">5406</td>
 							<td class="d-n_tp" style="color: #000 !important;font-family: apex !important;">Girona</td>
@@ -3847,7 +3847,7 @@ INICIO
 							<td class="d-n_tp" style="color: #000 !important;font-family: apex !important;">Roses</td>
 							<td class="d-n_tp" style="color: #000 !important;font-family: apex !important;">Girona</td>
 						</tr><tr>
-							<td class="p-0_tp"><a href="https://www.fcf.cat/club/2425/platja-de-roses-cf/fpi"><img class="escut-img" onerror="this.src='https://www.fcf.cat/img/escutbase.png'" src="https://files.fcf.cat/escudos/clubes/escudos/" style="max-width:30px !important;max-height:30px !important;"></a></td>
+							<td class="p-0_tp"><a href="https://www.fcf.cat/club/2425/platja-de-roses-cf/fpi"><img class="escut-img" onerror="this.src='https://www.fcf.cat/img/escutbase.png'" src="https://www.fcf.cat/img/escutbase.png" style="max-width:30px !important;max-height:30px !important;"></a></td>
 							<td class="tl" style="color: #000 !important;font-family: apexbold !important;"><a href="https://www.fcf.cat/club/2425/platja-de-roses-cf/fpi">PLATJA DE ROSES C.F.</a></td>
 							<td style="color: #777 !important;font-family: apex !important;">904</td>
 							<td class="d-n_tp" style="color: #000 !important;font-family: apex !important;">Roses</td>
@@ -8292,8 +8292,8 @@ INICIO
 							<td style="color: #777 !important;font-family: apex !important;">6435</td>
 							<td class="d-n_tp" style="color: #000 !important;font-family: apex !important;">Roca Del Vallès (La)</td>
 							<td class="d-n_tp" style="color: #000 !important;font-family: apex !important;">Barcelona</td>
-						</tr><tr>
-							<td class="p-0_tp"><a href="https://www.fcf.cat/club/2425//"><img class="escut-img" onerror="this.src='https://www.fcf.cat/img/escutbase.png'" src="https://files.fcf.cat/escudos/clubes/escudos/" style="max-width:30px !important;max-height:30px !important;"></a></td>
+						</tr><tr>												       	
+							<td class="p-0_tp"><a href="https://www.fcf.cat/club/2425//"><img class="escut-img" onerror="this.src='https://www.fcf.cat/img/escutbase.png'" src="https://www.fcf.cat/img/escutbase.png" style="max-width:30px !important;max-height:30px !important;"></a></td>
 							<td class="tl" style="color: #000 !important;font-family: apexbold !important;"><a href="https://www.fcf.cat/club/2425//">SANT ESTEVE PALAUTORDERA ASSOC. ESP. FUTBOL</a></td>
 							<td style="color: #777 !important;font-family: apex !important;">6495</td>
 							<td class="d-n_tp" style="color: #000 !important;font-family: apex !important;">Sant Esteve De Palautordera</td>
@@ -8329,7 +8329,7 @@ INICIO
 							<td class="d-n_tp" style="color: #000 !important;font-family: apex !important;">Gualba</td>
 							<td class="d-n_tp" style="color: #000 !important;font-family: apex !important;">Barcelona</td>
 						</tr><tr>
-							<td class="p-0_tp"><a href="https://www.fcf.cat/club/2425//"><img class="escut-img" onerror="this.src='https://www.fcf.cat/img/escutbase.png'" src="https://files.fcf.cat/escudos/clubes/escudos/" style="max-width:30px !important;max-height:30px !important;"></a></td>
+							<td class="p-0_tp"><a href="https://www.fcf.cat/club/2425//"><img class="escut-img" onerror="this.src='https://www.fcf.cat/img/escutbase.png'" src="https://www.fcf.cat/img/escutbase.png" style="max-width:30px !important;max-height:30px !important;"></a></td>
 							<td class="tl" style="color: #000 !important;font-family: apexbold !important;"><a href="https://www.fcf.cat/club/2425//">LA ROCA CLUB FUTBOL </a></td>
 							<td style="color: #777 !important;font-family: apex !important;">6672</td>
 							<td class="d-n_tp" style="color: #000 !important;font-family: apex !important;">Roca Del Vallès (La)</td>
